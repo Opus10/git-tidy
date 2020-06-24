@@ -6,5 +6,8 @@ Table of Contents
 
    index
    installation
+   tutorial
+   cli
+   package
    release_notes
    contributing

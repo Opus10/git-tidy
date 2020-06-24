@@ -48,6 +48,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
+    'sphinx_click.ext',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -68,7 +69,7 @@ default_role = 'any'
 
 # General information about the project.
 project = u'git-tidy'
-copyright = u'2019, Jyve'
+copyright = u'2020, Jyve'
 author = u'Jyve Engineering'
 
 # The version info for the project you're documenting, acts as replacement for
