@@ -1,7 +1,7 @@
 _extensions:
 - jinja2_time.TimeExtension
 _template: git@github.com:jyveapp/public-python-library-template.git
-_version: 78f5e695b45285011d85c44f935fa04d1063f13c
+_version: efd45a7fe43d4d902e773ae07dc842507847d22c
 module_name: tidy
 repo_name: git-tidy
 short_description: Tidy git commit messages, linting, and logging
