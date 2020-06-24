@@ -21,9 +21,9 @@ jobs:
             - /home/circleci/.local
             - /home/circleci/.cache/pypoetry/virtualenvs
             - /home/circleci/.cache/pipx
-- /home/circleci/git-tidy/.tox
+            - /home/circleci/git-tidy/.tox
 
-lint:
+  lint:
     executor: python
     steps:
       - checkout

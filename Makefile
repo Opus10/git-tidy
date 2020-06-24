@@ -79,6 +79,7 @@ dependencies:
 
 .PHONY: git_tidy
 git_tidy:
+	-rm -rf git_tidy.egg-info/
 	-pipx install --force git-tidy --pip-args="--upgrade"
 	git tidy --template -o .gitcommit.tpl
 	git config --local commit.template .gitcommit.tpl
@@ -90,12 +91,12 @@ pre_commit:
 
 
 .PHONY: ci_setup
-ci_setup: package_managers dependencies git_tidy
+ci_setup: package_managers dependencies
 
 
 # Sets up environment and installs dependencies
 .PHONY: setup
-setup: check_not_inside_venv package_managers git_tidy dependencies pre_commit
+setup: check_not_inside_venv package_managers dependencies pre_commit
 
 
 # Clean the documentation folder
@@ -139,10 +140,11 @@ lint:
 
 # Lint commit messages and show changelog when on circleci
 check_changelog:
-ifdef CIRCLECI
-	git tidy-log origin/master
-endif
-	git tidy-lint origin/master
+	echo "success"
+# ifdef CIRCLECI
+# 	git tidy-log origin/master
+# endif
+# 	git tidy-lint origin/master
 
 
 # Format code
