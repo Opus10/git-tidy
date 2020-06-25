@@ -1,4 +1,8 @@
 # Changelog
+## 1.0.2 (2020-06-25)
+### Trivial
+  - Add additional README docs and homebrew install instructions. [Wes Kendall, bb7859e]
+
 ## 1.0.1 (2020-06-24)
 ### Trivial
   - Added more package metadata and use git-tidy to generate ChangeLog. [Wes Kendall, 0c7c000]
