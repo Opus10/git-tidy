@@ -1,4 +1,8 @@
 # Changelog
+## 1.0.3 (2020-06-28)
+### Trivial
+  - Fixed link to image in README. [Wes Kendall, 825c511]
+
 ## 1.0.2 (2020-06-25)
 ### Trivial
   - Add additional README docs and homebrew install instructions. [Wes Kendall, bb7859e]
