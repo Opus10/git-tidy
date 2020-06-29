@@ -15,7 +15,7 @@ git-tidy
    Want to automatically generate release notes? ``git tidy-log`` can
    be configured to group and render commits based on the schema.
 
-.. image:: docs/_static/tidy-commit.gif
+.. image:: https://raw.githubusercontent.com/jyveapp/git-tidy/master/docs/_static/tidy-commit.gif
     :width: 600
 
 Documentation
