@@ -586,7 +586,7 @@ class CommitRange(Commits):
         if after:
             git_log_cmd += f' --after={after}'
         if reverse:
-            git_log_cmd += f' --reverse'
+            git_log_cmd += ' --reverse'
 
         git_yaml_logs = _git_log_as_yaml(git_log_cmd)
 
@@ -657,7 +657,7 @@ def commit(no_verify=False, allow_empty=False, defaults=None):
     # a failing git commit
     staged_changes = utils.shell_stdout('git diff --cached')
     if not staged_changes and not allow_empty:
-        return utils.shell(f'git commit --no-verify', check=False)
+        return utils.shell('git commit --no-verify', check=False)
 
     schema = _load_commit_schema(full=False)
     entry = schema.prompt(defaults=defaults)

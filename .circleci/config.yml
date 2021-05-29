@@ -4,7 +4,7 @@ executors:
   python:
     working_directory: ~/git-tidy
     docker:
-      - image: jyve/circleci-public-python-library
+      - image: opus10/circleci-public-python-library
 
 jobs:
   test:
@@ -46,7 +46,7 @@ jobs:
     steps:
       - checkout
       - run: ssh-add -D
-      - run: echo "${GITHUB_JYVE_DEVOPS_PRIVATE_SSH_KEY_BASE64}" | base64 --decode | ssh-add - > /dev/null
+      - run: echo "${GITHUB_DEVOPS_PRIVATE_SSH_KEY_BASE64}" | base64 --decode | ssh-add - > /dev/null
       - restore_cache:
           key: v1-{{ checksum "poetry.lock" }}
       - run: make ci_setup

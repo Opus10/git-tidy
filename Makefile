@@ -18,10 +18,12 @@ OS = $(shell uname -s)
 
 PACKAGE_NAME=git-tidy
 MODULE_NAME=tidy
+SHELL=bash
 
-PY36_VERSION=3.6.5
-PY37_VERSION=3.7.6
-PY38_VERSION=3.8.2
+PY36_VERSION=3.6.13
+PY37_VERSION=3.7.10
+PY38_VERSION=3.8.10
+PY39_VERSION=3.9.4
 
 
 # Print usage of main targets when user types "make" or "make help"
@@ -54,10 +56,11 @@ ifeq (${OS}, Darwin)
 	-brew install pyenv 2> /dev/null
 	-brew upgrade pyenv 2> /dev/null
 	-pyenv rehash
-	pyenv install -s ${PY36_VERSION}
-	pyenv install -s ${PY37_VERSION}
-	pyenv install -s ${PY38_VERSION}
-	pyenv local ${PY36_VERSION} ${PY37_VERSION} ${PY38_VERSION}
+	pyenv install -s --patch ${PY36_VERSION} < <(curl -sSL https://github.com/python/cpython/commit/8ea6353.patch)
+	pyenv install -s --patch ${PY37_VERSION}
+	pyenv install -s --patch ${PY38_VERSION}
+	pyenv install -s --patch ${PY39_VERSION}
+	pyenv local ${PY36_VERSION} ${PY37_VERSION} ${PY38_VERSION} ${PY39_VERSION}
 endif
 # Conditionally install pipx so that we can globally install poetry
 	pip install --user --upgrade --force-reinstall pipx

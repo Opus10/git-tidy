@@ -10,7 +10,7 @@ Setup
 
 Set up your development environment with::
 
-    git clone git@github.com:jyveapp/git-tidy.git
+    git clone git@github.com:Opus10/git-tidy.git
     cd git-tidy
     make setup
 
