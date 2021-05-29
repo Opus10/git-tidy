@@ -4,7 +4,7 @@ Installation
 ``git-tidy`` can be installed a number of ways. The preferred way
 on OSX is with homebrew::
 
-    brew tap jyveapp/homebrew-tap
+    brew tap opus10/homebrew-tap
     brew install git-tidy
 
 If not on OSX, one can install ``git-tidy`` system-wide with

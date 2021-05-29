@@ -113,8 +113,8 @@ template. The template is supplied with the following variables:
 
 1. ``output`` - The output file, if any, supplied to ``git tidy-log``.
 2. ``range`` - The range of commits (if any) being logged.
-3. ``commits`` - The `CommitRange` object retrieved during the ``git log``
-   call. The `CommitRange` object has methods for grouping and filtering
+3. ``commits`` - The `tidy.CommitRange` object retrieved during the ``git log``
+   call. The `tidy.CommitRange` object has methods for grouping and filtering
    commit messages.
 
 Similar to linting, ``git tidy-log`` takes a range of commits as an argument.
@@ -163,7 +163,7 @@ from before.
 
 
 Each commit (in the ``commits`` object or the groupings) is a
-`Commit` object that contains all of the user-supplied attributes in the
+`tidy.Commit` object that contains all of the user-supplied attributes in the
 schema and the following attributes:
 
 1. ``sha`` - Full SHA of the commit.
@@ -182,7 +182,7 @@ schema and the following attributes:
 12. ``validation_errors`` - The validation errors, if any, that happened.
 
 Note that all of these attributes, along with any defined in the commit
-schema, may be used for grouping and filtering `CommitRange` objects.
+schema, may be used for grouping and filtering `tidy.CommitRange` objects.
 
 If one wishes to have separate templates for separate types of renderings
 (e.g. a verbose change log vs a summary), use the ``--style`` option.
@@ -233,7 +233,7 @@ More Examples
 
 For more examples of schema specifications, check out the
 `formaldict Docs <https://formaldict.readthedocs.org>`__.
-Check the docs for `CommitRange` for all of the available methods one can
+Check the docs for `tidy.CommitRange` for all of the available methods one can
 use when rendering commits in templates. And finally, brush up on your
 `Jinja <https://jinja.palletsprojects.com/en/2.10.x/api/>`__ for
 more expressive log rendering.
