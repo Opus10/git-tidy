@@ -1,5 +1,9 @@
 # Changelog
-## 1.0.3 (2020-06-28)
+## 1.0.4 (2021-05-29)
+### Trivial
+  - Updated with latest Python template [Wes Kendall, 38da743]
+
+## 1.0.3 (2020-06-29)
 ### Trivial
   - Fixed link to image in README. [Wes Kendall, 825c511]
 
