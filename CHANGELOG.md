@@ -1,4 +1,8 @@
 # Changelog
+## 1.0.5 (2021-12-15)
+### Trivial
+  - Update to the latest Python template [Wes Kendall, d961605]
+
 ## 1.0.4 (2021-05-29)
 ### Trivial
   - Updated with latest Python template [Wes Kendall, 38da743]
