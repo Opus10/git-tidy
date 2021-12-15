@@ -170,9 +170,10 @@ def _load_commit_schema(path=None, full=True):
 
 def _check_git_version():
     """Verify git version"""
-    git_version = utils.shell_stdout(
-        "git --version | rev | cut -f 1 -d' ' | rev"
-    )
+    git_version_out = utils.shell_stdout("git --version").split(' ')
+    assert len(git_version_out) >= 2
+    git_version = git_version_out[2]
+
     if version.parse(git_version) < version.parse('2.22.0'):
         raise RuntimeError(
             f'Must have git version >= 2.22.0 (version = {git_version})'

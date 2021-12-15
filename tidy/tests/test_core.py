@@ -99,10 +99,11 @@ def test_load_commit_schema(
 @pytest.mark.parametrize(
     'git_version, expected_exception',
     [
-        ('2.22.0', does_not_raise()),
-        ('2.22.1', does_not_raise()),
-        ('2.23', does_not_raise()),
-        ('1.1', pytest.raises(RuntimeError)),
+        ('git version 2.22.0', does_not_raise()),
+        ('git version 2.22.1', does_not_raise()),
+        ('git version 2.23', does_not_raise()),
+        ('git version 2.30.1 (Apple Git-130)', does_not_raise()),
+        ('git version 1.1', pytest.raises(RuntimeError)),
     ],
 )
 def test_check_git_version(mocker, git_version, expected_exception):
