@@ -68,12 +68,6 @@ endif
 	-pipx install --force poetry --pip-args="--upgrade"
 
 
-# Remove the virtual environment
-.PHONY: clean_env
-clean_env:
-	-poetry env remove ${PYTHON_VERSION}
-
-
 # Builds all dependencies for a project
 .PHONY: dependencies
 dependencies:
