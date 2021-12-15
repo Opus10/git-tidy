@@ -1,4 +1,11 @@
 # Changelog
+## 1.1.0 (2021-12-15)
+### Bug
+  - Fix git versions installed on Mac [Wes Kendall, 2c7e268]
+
+    The return of ``git --version`` on Macs produce a different version string that
+    was previously not supported in git-tidy. This is now fixed.
+
 ## 1.0.5 (2021-12-15)
 ### Trivial
   - Update to the latest Python template [Wes Kendall, d961605]
