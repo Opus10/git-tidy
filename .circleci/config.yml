@@ -13,8 +13,8 @@ jobs:
       - checkout
       - restore_cache:
           key: v1-{{ checksum "poetry.lock" }}
-      - run: make ci_setup
-      - run: make test
+      - run: poetry install
+      - run: make _full-test-suite
       - save_cache:
           key: v1-{{ checksum "poetry.lock" }}
           paths:
@@ -29,8 +29,8 @@ jobs:
       - checkout
       - restore_cache:
           key: v1-{{ checksum "poetry.lock" }}
-      - run: make ci_setup
-      - run: make lint
+      - run: poetry install
+      - run: make _lint
 
   check_changelog:
     executor: python
@@ -38,8 +38,9 @@ jobs:
       - checkout
       - restore_cache:
           key: v1-{{ checksum "poetry.lock" }}
-      - run: make ci_setup
-      - run: make check_changelog
+      - run: poetry install
+      - run: git tidy-log origin/master..
+      - run: make _check-changelog
 
   deploy:
     executor: python
@@ -49,7 +50,7 @@ jobs:
       - run: echo "${GITHUB_DEVOPS_PRIVATE_SSH_KEY_BASE64}" | base64 --decode | ssh-add - > /dev/null
       - restore_cache:
           key: v1-{{ checksum "poetry.lock" }}
-      - run: make ci_setup
+      - run: poetry install
       - run: poetry run python devops.py deploy
 
 workflows:

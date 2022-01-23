@@ -14,24 +14,46 @@ Set up your development environment with::
     cd git-tidy
     make setup
 
-``make setup`` will setup python managed by
-`pyenv <https://github.com/yyuu/pyenv>`_ and install dependencies using
-`poetry <https://poetry.eustace.io/>`_.
+``make setup`` will set up a development environment managed by Docker.
+Install docker `here <https://www.docker.com/get-started>`_.
+
 
 Testing and Validation
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Run the tests with::
+Run the tests on one Python version with::
 
     make test
+
+Run the full test suite against all supported Python versions with::
+
+    make full-test-suite
 
 Validate the code with::
 
     make lint
 
-Run automated code formatting with::
+If your code fails the ``black`` check, automatically format your code with::
 
     make format
+
+Committing
+~~~~~~~~~~
+
+`git-tidy <https://github.com/Opus10/git-tidy>`_ is used to produce structured
+commits with git trailers. Git commits are validated in continuous integration
+because we use the information from them to generate release notes and
+bump library versions.
+
+To do a structured commit with ``git-tidy``, do::
+
+    make tidy-commit
+
+All commits in a pull request must be tidy commits that encapsulate a
+change. Ideally entire features or bug fixes are encapsulated in a
+single commit. Squash all of your commits into a tidy commit with::
+
+    make tidy-squash
 
 Documentation
 ~~~~~~~~~~~~~
@@ -43,7 +65,7 @@ Documentation
 The static HTML files are stored in the ``docs/_build/html`` directory.
 A shortcut for opening them (on OSX) is::
 
-    make open_docs
+    make open-docs
 
 Releases and Versioning
 ~~~~~~~~~~~~~~~~~~~~~~~
