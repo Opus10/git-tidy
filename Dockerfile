@@ -5,7 +5,7 @@ RUN mkdir /code
 WORKDIR /code
 
 # Install requirements
-COPY pyproject.toml poetry.lock .
+COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-root
 
 # Install root project
