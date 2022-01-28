@@ -80,7 +80,7 @@ full-test-suite:
 # Clean the documentation folder
 .PHONY: clean-docs
 clean-docs:
-	-$(DOCKER_RUN) bash -c 'cd docs && make clean'
+	-$(DOCKER_RUN) poetry run bash -c 'cd docs && make clean'
 
 
 # Open the build docs (only works on Mac)
@@ -96,7 +96,7 @@ endif
 # Build Sphinx autodocs
 .PHONY: docs
 docs: clean-docs  # Ensure docs are clean, otherwise weird render errors can result
-	$(DOCKER_RUN) bash -c 'cd docs && make html'	
+	$(DOCKER_RUN) poetry run bash -c 'cd docs && make html'	
 
 
 # Core linting command used in CI
@@ -105,7 +105,7 @@ _lint:
 	poetry run black . --check
 	poetry run flake8 -v ${MODULE_NAME}
 	poetry run temple update --check
-	cd docs && make html
+	poetry run bash -c 'cd docs && make html'
 
 
 # Run code linting and static analysis. Ensure docs can be built
