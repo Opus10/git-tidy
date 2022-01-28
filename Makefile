@@ -23,7 +23,7 @@ ifneq ($(wildcard ~/.gitconfig),)
 endif 
 
 # Docker run mounts the local code directory, SSH (for git), and global git config information
-DOCKER_RUN=docker run --rm -v $(shell pwd):/code -v ~/.ssh:/root/.ssh $(GIT_CONFIG_DOCKER_MOUNT) -it opus10/git-tidy
+DOCKER_RUN=docker run --rm -v $(shell pwd):/code -v ~/.ssh:/root/.ssh $(GIT_CONFIG_DOCKER_MOUNT) -it opus10/circleci-public-python-library
 
 
 # Print usage of main targets when user types "make" or "make help"
@@ -41,16 +41,23 @@ help:
 	@exit 2
 
 
+# Install dependenies
+.PHONY: dependencies
+dependencies:
+	$(DOCKER_RUN) poetry install
+
+
 # Sets up development environment
 .PHONY: setup
-setup:
-	docker build . --rm -t opus10/git-tidy
+setup: dependencies
+	$(DOCKER_RUN) poetry run git-tidy --template -o .gitcommit.tpl
+	$(DOCKER_RUN) poetry run git config --local commit.template .gitcommit.tpl
 
 
 # Get a shell into the development environment
 .PHONY: shell
 shell:
-	$(DOCKER_RUN) poetry shell
+	$(DOCKER_RUN) /bin/bash
 
 
 # Run pytest

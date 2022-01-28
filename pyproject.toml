@@ -4,7 +4,7 @@ build-backend = "poetry.masonry.api"
 
 [tool.black]
 line-length = 79
-target-version = ['py36']
+target-version = ['py37']
 skip-string-normalization = true
 
 [tool.poetry]
@@ -19,10 +19,10 @@ classifiers = [
   "Intended Audience :: Developers",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.6",
   "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3 :: Only",
 ]
 license = "BSD-3-Clause"
@@ -49,8 +49,6 @@ flake8-comprehensions = "3.5.0"
 flake8-import-order = "0.18.1"
 flake8-logging-format = "0.6.0"
 flake8-mutable = "1.2.0"
-pip = "*"
-pre-commit = "2.13.0"
 pytest = "6.2.4"
 pytest-cov = "2.12.0"
 pytest-mock = "3.6.1"
