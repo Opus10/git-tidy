@@ -55,6 +55,14 @@ single commit. Squash all of your commits into a tidy commit with::
 
     make tidy-squash
 
+To check if your commits pass linting, do::
+
+    make tidy-lint
+
+Note, the above command lints every commit since branching from master.
+You can also run ``make shell`` and run ``git tidy`` commands inside
+the docker environment.
+
 Documentation
 ~~~~~~~~~~~~~
 

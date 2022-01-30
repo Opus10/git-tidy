@@ -104,8 +104,8 @@ lint:
 
 
 # Lint commit messages
-.PHONY: check-changelog
-check-changelog:
+.PHONY: tidy-lint
+tidy-lint:
 	$(MAKE_CMD_WRAPPER) poetry run git tidy-lint origin/master..
 
 

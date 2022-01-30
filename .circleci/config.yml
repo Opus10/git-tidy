@@ -6,6 +6,7 @@ executors:
     docker:
       - image: opus10/circleci-public-python-library
         environment:
+          # Ensure makefile commands are not wrapped in "docker run"
           MAKE_CMD_WRAPPER: ''
 
 jobs:
@@ -34,7 +35,7 @@ jobs:
       - run: make dependencies
       - run: make lint
 
-  check_changelog:
+  check_commits:
     executor: python
     steps:
       - checkout
@@ -42,7 +43,7 @@ jobs:
           key: v1-{{ checksum "poetry.lock" }}
       - run: make dependencies
       - run: poetry run git tidy-log origin/master..
-      - run: make check-changelog
+      - run: make tidy-lint
 
   deploy:
     executor: python
@@ -61,7 +62,7 @@ workflows:
     jobs:
       - test
       - lint
-      - check_changelog:
+      - check_commits:
           filters:
             branches:
               ignore: master
