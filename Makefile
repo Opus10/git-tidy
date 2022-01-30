@@ -23,7 +23,7 @@ ifneq ($(wildcard ~/.gitconfig),)
 endif 
 
 # Docker run mounts the local code directory, SSH (for git), and global git config information
-DOCKER_RUN=docker run --rm -v $(shell pwd):/code -v ~/.ssh:/home/circleci/.ssh $(GIT_CONFIG_DOCKER_MOUNT) -it opus10/circleci-public-python-library
+MAKE_CMD_WRAPPER?=docker run --rm -v $(shell pwd):/code -v ~/.ssh:/home/circleci/.ssh $(GIT_CONFIG_DOCKER_MOUNT) -it opus10/circleci-public-python-library
 
 
 # Print usage of main targets when user types "make" or "make help"
@@ -44,43 +44,38 @@ help:
 # Install dependenies
 .PHONY: dependencies
 dependencies:
-	$(DOCKER_RUN) poetry install
+	$(MAKE_CMD_WRAPPER) poetry install
 
 
 # Sets up development environment
 .PHONY: setup
 setup: dependencies
-	$(DOCKER_RUN) poetry run git-tidy --template -o .gitcommit.tpl
-	$(DOCKER_RUN) poetry run git config --local commit.template .gitcommit.tpl
+	$(MAKE_CMD_WRAPPER) poetry run git-tidy --template -o .gitcommit.tpl
+	$(MAKE_CMD_WRAPPER) poetry run git config --local commit.template .gitcommit.tpl
 
 
 # Get a shell into the development environment
 .PHONY: shell
 shell:
-	$(DOCKER_RUN) /bin/bash
+	$(MAKE_CMD_WRAPPER) /bin/bash
 
 
 # Run pytest
 .PHONY: test
 test:
-	$(DOCKER_RUN) poetry run pytest
+	$(MAKE_CMD_WRAPPER) poetry run pytest
 
-
-# Run full test suite in CI
-.PHONY: _full-test-suite
-_full-test-suite:
-	poetry run tox
 
 # Run full test suite
 .PHONY: full-test-suite
 full-test-suite:
-	$(DOCKER_RUN) make _full-test-suite
+	$(MAKE_CMD_WRAPPER) poetry run tox
 
 
 # Clean the documentation folder
 .PHONY: clean-docs
 clean-docs:
-	-$(DOCKER_RUN) poetry run bash -c 'cd docs && make clean'
+	-$(MAKE_CMD_WRAPPER) poetry run bash -c 'cd docs && make clean'
 
 
 # Open the build docs (only works on Mac)
@@ -96,52 +91,40 @@ endif
 # Build Sphinx autodocs
 .PHONY: docs
 docs: clean-docs  # Ensure docs are clean, otherwise weird render errors can result
-	$(DOCKER_RUN) poetry run bash -c 'cd docs && make html'	
-
-
-# Core linting command used in CI
-.PHONY: _lint
-_lint:
-	poetry run black . --check
-	poetry run flake8 -v ${MODULE_NAME}
-	poetry run temple update --check
-	poetry run bash -c 'cd docs && make html'
+	$(MAKE_CMD_WRAPPER) poetry run bash -c 'cd docs && make html'
 
 
 # Run code linting and static analysis. Ensure docs can be built
 .PHONY: lint
 lint:
-	$(DOCKER_RUN) make _lint
-
-
-# Lint commit messages on CI
-.PHONY: _check-changelog
-_check-changelog:
-	poetry run git tidy-lint origin/master
+	$(MAKE_CMD_WRAPPER) poetry run black . --check
+	$(MAKE_CMD_WRAPPER) poetry run flake8 -v ${MODULE_NAME}
+	$(MAKE_CMD_WRAPPER) poetry run temple update --check
+	$(MAKE_CMD_WRAPPER) poetry run bash -c 'cd docs && make html'
 
 
 # Lint commit messages
 .PHONY: check-changelog
 check-changelog:
-	$(DOCKER_RUN) make _check-changelog
+	$(MAKE_CMD_WRAPPER) poetry run git tidy-lint origin/master
 
 
 # Perform a tidy commit
 .PHONY: tidy-commit
 tidy-commit:
-	$(DOCKER_RUN) poetry run git tidy-commit
+	$(MAKE_CMD_WRAPPER) poetry run git tidy-commit
 
 
 # Perform a tidy squash
 .PHONY: tidy-squash
 tidy-squash:
-	$(DOCKER_RUN) poetry run git tidy-squash origin/master
+	$(MAKE_CMD_WRAPPER) poetry run git tidy-squash origin/master
 
 
 # Format code with black
 .PHONY: format
 format:
-	$(DOCKER_RUN) poetry run black .
+	$(MAKE_CMD_WRAPPER) poetry run black .
 
 
 # Show the version the project. Used by CI and docs
