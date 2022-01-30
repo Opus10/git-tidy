@@ -39,7 +39,7 @@ jobs:
       - restore_cache:
           key: v1-{{ checksum "poetry.lock" }}
       - run: poetry install
-      - run: git tidy-log origin/master..
+      - run: poetry run git tidy-log origin/master..
       - run: make _check-changelog
 
   deploy:
