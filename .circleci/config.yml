@@ -15,8 +15,8 @@ jobs:
       - checkout
       - restore_cache:
           key: v1-{{ checksum "poetry.lock" }}
-      - run: poetry install
-      - run: make _full-test-suite
+      - run: make dependencies
+      - run: make full-test-suite
       - save_cache:
           key: v1-{{ checksum "poetry.lock" }}
           paths:
