@@ -125,15 +125,3 @@ tidy-squash:
 .PHONY: format
 format:
 	$(MAKE_CMD_WRAPPER) poetry run black .
-
-
-# Show the version the project. Used by CI and docs
-.PHONY: _version
-_version:
-	-@poetry version | rev | cut -f 1 -d' ' | rev
-
-
-# Show the name of the project
-.PHONY: project-name
-_project-name:
-	-@poetry version | cut -d' ' -f1
