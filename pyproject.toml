@@ -12,7 +12,7 @@ name = "git-tidy"
 packages = [
   { include = "tidy" }
 ]
-version = "1.1.1"
+version = "1.1.0"
 description = "Tidy git commit messages, linting, and logging"
 authors = ["Wes Kendall", "Tómas Árni Jónasson"]
 classifiers = [
