@@ -98,7 +98,7 @@ def _find_sem_ver_update():
 def _update_package_version():
     """Apply semantic versioning to package based on git commit messages"""
     # Obtain the current version
-    old_version = _shell_stdout('make version')
+    old_version = _shell_stdout("poetry version | rev | cut -f 1 -d' ' | rev")
     if old_version == '0.0.0':
         old_version = ''
     latest_tag = _find_latest_tag()
@@ -114,7 +114,7 @@ def _update_package_version():
     _shell(f'poetry version {sem_ver}')
 
     # Get the new version
-    new_version = _shell_stdout('make version')
+    new_version = _shell_stdout("poetry version | rev | cut -f 1 -d' ' | rev")
 
     if new_version == old_version:
         raise RuntimeError(
