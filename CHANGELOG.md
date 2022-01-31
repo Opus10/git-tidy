@@ -1,5 +1,9 @@
 # Changelog
-## 1.1.1 (2022-01-30)
+## 1.1.2 (2022-01-30)
+### Trivial
+  - Minor docker development fixes [Opus 10 Devops, 25633a5]
+
+## 1.1.1 (2022-01-31)
 ### Trivial
   - Updated with the latest version of the template, which drops Python 3.6 support and adds Python 3.10 support [Opus 10 Devops, aa8e925]
 
