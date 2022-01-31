@@ -1,4 +1,8 @@
 # Changelog
+## 1.1.1 (2022-01-30)
+### Trivial
+  - Updated with the latest version of the template, which drops Python 3.6 support and adds Python 3.10 support [Opus 10 Devops, aa8e925]
+
 ## 1.1.0 (2021-12-15)
 ### Bug
   - Fix git versions installed on Mac [Wes Kendall, 2c7e268]
