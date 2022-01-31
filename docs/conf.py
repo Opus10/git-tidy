@@ -69,7 +69,7 @@ default_role = 'any'
 
 # General information about the project.
 project = u'git-tidy'
-copyright = u'2021, Opus 10'
+copyright = u'2022, Opus 10'
 author = u'Opus 10 Engineering'
 
 # The version info for the project you're documenting, acts as replacement for
