@@ -21,7 +21,7 @@ SHELL=bash
 
 # Only mount the git config file when it exists. Otherwise Docker will create an empty directory
 ifneq ($(wildcard ~/.gitconfig),) 
-    GIT_CONFIG_DOCKER_MOUNT = -v ~/.gitconfig:/root/.gitconfig
+    GIT_CONFIG_DOCKER_MOUNT = -v ~/.gitconfig:/home/circleci/.gitconfig
 endif 
 
 # Docker run mounts the local code directory, SSH (for git), and global git config information
