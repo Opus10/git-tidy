@@ -12,6 +12,7 @@
 # test - Run tests using pytest
 # full-test-suite - Run full test suite using tox
 # shell - Run a shell in a virtualenv
+# teardown - Spin down docker resources
 
 OS = $(shell uname -s)
 
@@ -19,81 +20,103 @@ PACKAGE_NAME=git-tidy
 MODULE_NAME=tidy
 SHELL=bash
 
-# Only mount the git config file when it exists. Otherwise Docker will create an empty directory
-ifneq ($(wildcard ~/.gitconfig),) 
-    GIT_CONFIG_DOCKER_MOUNT = -v ~/.gitconfig:/home/circleci/.gitconfig
-endif 
+ifeq (${OS}, Linux)
+	DOCKER_CMD?=sudo docker
+	DOCKER_RUN_ARGS?=-v /home:/home -v $(shell pwd):/code -e DOCKER_EXEC_WRAPPER="" -u "$(shell id -u):$(shell id -g)"  -v /etc/passwd:/etc/passwd
+	# The user can be passed to docker exec commands in Linux.
+	# For example, "make shell user=root" for access to apt-get commands
+	user?=$(shell id -u)
+	group?=$(shell id ${user} -u)
+	DOCKER_EXEC_WRAPPER?=$(DOCKER_CMD) exec --user="$(user):$(group)" -it $(PACKAGE_NAME)
+else ifeq (${OS}, Darwin)
+	DOCKER_CMD?=docker
+	DOCKER_RUN_ARGS?=-v ~/:/home/circleci -v $(shell pwd):/code -e DOCKER_EXEC_WRAPPER=""
+	DOCKER_EXEC_WRAPPER?=$(DOCKER_CMD) exec -it $(PACKAGE_NAME)
+endif
 
 # Docker run mounts the local code directory, SSH (for git), and global git config information
-MAKE_CMD_WRAPPER?=docker run --rm -v $(shell pwd):/code -v ~/.ssh:/home/circleci/.ssh $(GIT_CONFIG_DOCKER_MOUNT) -it opus10/circleci-public-python-library
+DOCKER_RUN_CMD?=$(DOCKER_CMD) run -t --name $(PACKAGE_NAME) $(DOCKER_RUN_ARGS) -d opus10/circleci-public-python-library
 
 
 # Print usage of main targets when user types "make" or "make help"
 .PHONY: help
 help:
+ifndef run
 	@echo "Please choose one of the following targets: \n"\
 	      "    setup: Setup development environment\n"\
 	      "    lock: Lock dependencies\n"\
 	      "    dependencies: Install dependencies\n"\
 	      "    shell: Start a shell\n"\
-	      "    run: Run a command\n"\
 	      "    test: Run tests\n"\
 	      "    tox: Run tests against all versions of Python\n"\
 	      "    lint: Run code linting and static checks\n"\
+	      "    format: Format code using Black\n"\
 	      "    docs: Build Sphinx documentation\n"\
 	      "    open-docs: Open built documentation\n"\
+	      "    teardown: Spin down docker resources\n"\
 	      "\n"\
 	      "View the Makefile for more documentation"
 	@exit 2
+else
+	$(DOCKER_EXEC_WRAPPER) $(run)
+endif
 
 
-# Locks all dependencies for a project
+# Pull the latest container and start a detached run
+.PHONY: docker-start
+docker-start:
+	$(DOCKER_CMD) pull opus10/circleci-public-python-library
+	$(DOCKER_RUN_CMD)
+
+
+# Stop and remove the container
+.PHONY: docker-stop
+docker-stop:
+	-$(DOCKER_CMD) stop $(PACKAGE_NAME)
+	-$(DOCKER_CMD) rm $(PACKAGE_NAME)
+
+
+# Lock dependencies
 .PHONY: lock
 lock:
-	$(MAKE_CMD_WRAPPER) poetry lock
+	$(DOCKER_EXEC_WRAPPER) poetry lock --no-update
 
 
-# Builds all dependencies for a project
+# Install dependencies
 .PHONY: dependencies
 dependencies:
-	$(MAKE_CMD_WRAPPER) poetry install
+	$(DOCKER_EXEC_WRAPPER) poetry install
 
 
 # Sets up development environment
 .PHONY: setup
-setup: lock dependencies
-	$(MAKE_CMD_WRAPPER) poetry run git-tidy --template -o .gitcommit.tpl
-	$(MAKE_CMD_WRAPPER) poetry run git config --local commit.template .gitcommit.tpl
+setup: teardown docker-start lock dependencies
+	$(DOCKER_EXEC_WRAPPER) git tidy --template -o .gitcommit.tpl
+	$(DOCKER_EXEC_WRAPPER) git config --local commit.template .gitcommit.tpl
 
 
 # Run a shell
 .PHONY: shell
 shell:
-	$(MAKE_CMD_WRAPPER) /bin/bash -c "SHELL=/bin/bash poetry shell"
-
-
-# Run a command
-.PHONY: run
-run:
-	$(MAKE_CMD_WRAPPER) poetry run $(filter-out $@,$(MAKECMDGOALS))
+	$(DOCKER_EXEC_WRAPPER) /bin/bash
 
 
 # Run pytest
 .PHONY: test
 test:
-	$(MAKE_CMD_WRAPPER) poetry run pytest
+	$(DOCKER_EXEC_WRAPPER) pytest
 
 
 # Run full test suite
 .PHONY: full-test-suite
 full-test-suite:
-	$(MAKE_CMD_WRAPPER) poetry run tox
+	$(DOCKER_EXEC_WRAPPER) tox
 
 
 # Clean the documentation folder
 .PHONY: clean-docs
 clean-docs:
-	-$(MAKE_CMD_WRAPPER) poetry run bash -c 'cd docs && make clean'
+	-$(DOCKER_EXEC_WRAPPER) bash -c 'cd docs && make clean'
 
 
 # Open the build docs (only works on Mac)
@@ -101,6 +124,8 @@ clean-docs:
 open-docs:
 ifeq (${OS}, Darwin)
 	open docs/_build/html/index.html
+else ifeq (${OS}, Linux)
+	xdg-open docs/_build/html/index.html
 else
 	@echo "Open 'docs/_build/html/index.html' to view docs"
 endif
@@ -109,37 +134,42 @@ endif
 # Build Sphinx autodocs
 .PHONY: docs
 docs: clean-docs  # Ensure docs are clean, otherwise weird render errors can result
-	$(MAKE_CMD_WRAPPER) poetry run bash -c 'cd docs && make html'
+	$(DOCKER_EXEC_WRAPPER) bash -c 'cd docs && make html'
 
 
 # Run code linting and static analysis. Ensure docs can be built
 .PHONY: lint
 lint:
-	$(MAKE_CMD_WRAPPER) poetry run black . --check
-	$(MAKE_CMD_WRAPPER) poetry run flake8 -v ${MODULE_NAME}
-	$(MAKE_CMD_WRAPPER) poetry run temple update --check
-	$(MAKE_CMD_WRAPPER) poetry run bash -c 'cd docs && make html'
+	$(DOCKER_EXEC_WRAPPER) black . --check
+	$(DOCKER_EXEC_WRAPPER) flake8 -v ${MODULE_NAME}
+	$(DOCKER_EXEC_WRAPPER) temple update --check
+	$(DOCKER_EXEC_WRAPPER) bash -c 'cd docs && make html'
 
 
 # Lint commit messages
 .PHONY: tidy-lint
 tidy-lint:
-	$(MAKE_CMD_WRAPPER) poetry run git tidy-lint origin/master..
+	$(DOCKER_EXEC_WRAPPER) git tidy-lint origin/master..
 
 
 # Perform a tidy commit
 .PHONY: tidy-commit
 tidy-commit:
-	$(MAKE_CMD_WRAPPER) poetry run git tidy-commit
+	$(DOCKER_EXEC_WRAPPER) git tidy-commit
 
 
 # Perform a tidy squash
 .PHONY: tidy-squash
 tidy-squash:
-	$(MAKE_CMD_WRAPPER) poetry run git tidy-squash origin/master
+	$(DOCKER_EXEC_WRAPPER) git tidy-squash origin/master
 
 
 # Format code with black
 .PHONY: format
 format:
-	$(MAKE_CMD_WRAPPER) poetry run black .
+	$(DOCKER_EXEC_WRAPPER) black .
+
+
+# Spin down docker resources
+.PHONY: teardown
+teardown: docker-stop

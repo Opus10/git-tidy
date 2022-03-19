@@ -108,9 +108,7 @@ def test_load_commit_schema(
 )
 def test_check_git_version(mocker, git_version, expected_exception):
     """Tests core._check_git_version"""
-    mocker.patch(
-        'tidy.utils.shell_stdout', autospec=True, return_value=git_version
-    )
+    mocker.patch('tidy.utils.shell_stdout', autospec=True, return_value=git_version)
     with expected_exception:
         core._check_git_version()
 
@@ -170,9 +168,7 @@ def test_tag_from_sha(
         return_value=git_describe_output,
     )
 
-    assert (
-        str(core.Tag.from_sha(sha, tag_match=tag_match)) == expected_tag_value
-    )
+    assert str(core.Tag.from_sha(sha, tag_match=tag_match)) == expected_tag_value
     assert patched_describe.call_args_list[0][0][0] == expected_git_call
 
 
@@ -180,9 +176,7 @@ def test_tag_from_sha(
     'git_log_output, expected_git_log_call, expected_date',
     [('', mock.call('git log -1 --format=%ad 2.1'), None)],
 )
-def test_tag_date(
-    mocker, git_log_output, expected_git_log_call, expected_date
-):
+def test_tag_date(mocker, git_log_output, expected_git_log_call, expected_date):
     """Tests core.Tag.date()"""
     patched_shell = mocker.patch(
         'tidy.utils.shell_stdout', autospec=True, return_value=git_log_output

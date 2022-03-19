@@ -32,9 +32,7 @@ def test_tidy(mocker, capsys):
 def test_tidy_template(mocker, capsys):
     """Test calling git-tidy with the "--template" option"""
     mocker.patch.object(sys, 'argv', ['git-tidy', '--template'])
-    patched_commit_template = mocker.patch(
-        'tidy.core.commit_template', autospec=True
-    )
+    patched_commit_template = mocker.patch('tidy.core.commit_template', autospec=True)
 
     cli.tidy()
 
@@ -49,9 +47,7 @@ def test_tidy_template(mocker, capsys):
         (['--no-verify'], 0, mock.call(no_verify=True, allow_empty=False)),
     ],
 )
-def test_tidy_commit(
-    mock_exit, mocker, command_args, commit_return_code, expected_commit_call
-):
+def test_tidy_commit(mock_exit, mocker, command_args, commit_return_code, expected_commit_call):
     """Test calling git-tidy-commit"""
     mocker.patch.object(sys, 'argv', ['git-tidy-commit'] + command_args)
     patched_commit = mocker.patch(
@@ -177,9 +173,7 @@ def test_tidy_log(mocker, command_args, expected_log_call):
         ),
     ],
 )
-def test_tidy_squash(
-    mock_exit, mocker, command_args, squash_return_code, expected_squash_call
-):
+def test_tidy_squash(mock_exit, mocker, command_args, squash_return_code, expected_squash_call):
     """Test calling git-tidy-squash"""
     mocker.patch.object(sys, 'argv', ['git-tidy-squash'] + command_args)
     patched_squash = mocker.patch(

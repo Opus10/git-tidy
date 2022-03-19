@@ -8,16 +8,12 @@ import subprocess
 
 def shell(cmd, check=True, stdin=None, stdout=None, stderr=None):
     """Runs a subprocess shell with check=True by default"""
-    return subprocess.run(
-        cmd, shell=True, check=check, stdin=stdin, stdout=stdout, stderr=stderr
-    )
+    return subprocess.run(cmd, shell=True, check=check, stdin=stdin, stdout=stdout, stderr=stderr)
 
 
 def shell_stdout(cmd, check=True, stdin=None, stderr=None):
     """Runs a shell command and returns stdout"""
-    ret = shell(
-        cmd, stdout=subprocess.PIPE, check=check, stdin=stdin, stderr=stderr
-    )
+    ret = shell(cmd, stdout=subprocess.PIPE, check=check, stdin=stdin, stderr=stderr)
     return ret.stdout.decode('utf-8').strip() if ret.stdout else ''
 
 

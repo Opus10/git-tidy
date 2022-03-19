@@ -75,23 +75,17 @@ def get_pull_request():
             opened from the current branch
     """
     org_name, repo_name = get_org_and_repo_name()
-    current_branch = utils.shell_stdout(
-        "git --no-pager branch | grep \\* | cut -d ' ' -f2"
-    )
+    current_branch = utils.shell_stdout("git --no-pager branch | grep \\* | cut -d ' ' -f2")
 
     try:
         prs = (
             GithubClient()
-            .get(
-                f'/repos/{org_name}/{repo_name}/pulls'
-                f'?head={org_name}:{current_branch}'
-            )
+            .get(f'/repos/{org_name}/{repo_name}/pulls' f'?head={org_name}:{current_branch}')
             .json()
         )
     except requests.exceptions.RequestException as exc:
         raise exceptions.GithubPullRequestAPIError(
-            'An unexpected error occurred with the Github pull requests'
-            ' API.'
+            'An unexpected error occurred with the Github pull requests' ' API.'
         ) from exc
 
     if not prs:
@@ -135,9 +129,7 @@ def comment(message):
         )
 
     # Try to find a comment already created so that it can be edited
-    pr_comments_url = (
-        f'/repos/{org_name}/{repo_name}/issues/{pr_number}/comments'
-    )
+    pr_comments_url = f'/repos/{org_name}/{repo_name}/issues/{pr_number}/comments'
     pr_comments = GithubClient().get(pr_comments_url).json()
     pr_comment_id = None
     for pr_comment in pr_comments:
@@ -145,9 +137,7 @@ def comment(message):
             pr_comment_id = pr_comment['id']
 
     if pr_comment_id:
-        comment_edit_url = (
-            f'/repos/{org_name}/{repo_name}/issues/comments/{pr_comment_id}'
-        )
+        comment_edit_url = f'/repos/{org_name}/{repo_name}/issues/comments/{pr_comment_id}'
         GithubClient().patch(comment_edit_url, json={'body': message})
     else:
         GithubClient().post(pr_comments_url, json={'body': message})
