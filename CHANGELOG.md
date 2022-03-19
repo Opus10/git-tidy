@@ -1,5 +1,9 @@
 # Changelog
-## 1.1.2 (2022-01-30)
+## 1.1.3 (2022-03-19)
+### Trivial
+  - Updated with the latest template, which upgrades local Docker development [Opus 10 Devops, 9a5a1b6]
+
+## 1.1.2 (2022-01-31)
 ### Trivial
   - Minor docker development fixes [Opus 10 Devops, 25633a5]
 
