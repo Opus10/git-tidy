@@ -21,18 +21,14 @@ from tidy import core
 
 @click.command()
 @click.option('--template', help='Show tidy commit template.', is_flag=True)
-@click.option(
-    '-o', '--output', help='Output file name of the commit template.'
-)
+@click.option('-o', '--output', help='Output file name of the commit template.')
 def tidy(template, output):
     """
     Print version information about ``git-tidy`` or show the tidy commit
     template.
     """
     if not template:
-        click.echo(
-            f'git-tidy {pkg_resources.get_distribution("git-tidy").version}'
-        )
+        click.echo(f'git-tidy {pkg_resources.get_distribution("git-tidy").version}')
     else:
         core.commit_template(output=output or sys.stdout)
 
@@ -69,10 +65,7 @@ def lint(ctx, range, any):
 
     if not is_valid:
         failures = commits.filter('is_valid', False)
-        err_msg = (
-            f'{len(failures)} out of {len(commits)} commits'
-            f' have failed linting:'
-        )
+        err_msg = f'{len(failures)} out of {len(commits)} commits' f' have failed linting:'
         click.echo(click.style(err_msg, fg='red'), err=True)
 
         for failure in failures:
@@ -128,7 +121,5 @@ def squash(ctx, ref, no_verify, allow_empty):
     If ``:github/pr`` is provided as the ref, the base branch of the pull
     request will be used (e.g. ``origin/develop``).
     """
-    commit_result = core.squash(
-        ref, no_verify=no_verify, allow_empty=allow_empty
-    )
+    commit_result = core.squash(ref, no_verify=no_verify, allow_empty=allow_empty)
     ctx.exit(commit_result.returncode)

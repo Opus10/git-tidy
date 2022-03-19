@@ -35,9 +35,7 @@ def test_get_org_and_repo_name(
     expected_exception,
 ):
     """Tests github.get_org_and_repo_name()"""
-    mocker.patch(
-        'tidy.utils.shell_stdout', return_value=git_origin, autospec=True
-    )
+    mocker.patch('tidy.utils.shell_stdout', return_value=git_origin, autospec=True)
     with expected_exception:
         org_name, repo_name = github.get_org_and_repo_name()
         assert org_name == expected_org_name
@@ -76,17 +74,12 @@ def test_github_client_call_api(mocker, responses):
     assert len(responses.calls) == 1
     assert responses.calls[0].request.body == 'post=data'
     assert responses.calls[0].request.headers['additonal'] == 'header'
-    assert (
-        responses.calls[0].request.headers['Authorization']
-        == 'token github_token'
-    )
+    assert responses.calls[0].request.headers['Authorization'] == 'token github_token'
 
 
 def test_github_client_get_patch_post(mocker):
     """Tests GithubClient.get(), patch(), and post() utility methods"""
-    patched_call_api = mocker.patch.object(
-        github.GithubClient, '_call_api', autospec=True
-    )
+    patched_call_api = mocker.patch.object(github.GithubClient, '_call_api', autospec=True)
     c = github.GithubClient()
     c.get('/get/url', get_arg='get')
     c.patch('/patch/url', patch_arg='patch')
@@ -139,10 +132,7 @@ def test_get_pull_request(
     )
     responses.add(
         responses.GET,
-        (
-            'https://api.github.com/repos/jyveapp/random-repo/'
-            'pulls?head=jyveapp:current_branch'
-        ),
+        ('https://api.github.com/repos/jyveapp/random-repo/' 'pulls?head=jyveapp:current_branch'),
         json=api_return,
         status=api_status,
     )
@@ -231,9 +221,7 @@ def test_comment(
         side_effect=[comment_response, None],
     )
     monkeypatch.setenv('GITHUB_USERNAME', github_username)
-    mocker.patch(
-        'tidy.github.get_pull_request', autospec=True, return_value=pr
-    )
+    mocker.patch('tidy.github.get_pull_request', autospec=True, return_value=pr)
     mocker.patch(
         'tidy.github.get_org_and_repo_name',
         autospec=True,

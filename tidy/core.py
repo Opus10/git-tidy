@@ -35,9 +35,7 @@ DEFAULT_LOG_TEMPLATE = """
 {% endfor %}
 """
 # Used for parsing descriptions from git commits and excluding trailers
-REGEX_RFC822_POSTFIX = (
-    r'((^|\n)(?P<key>[A-Z]\w+(-\w+)*):(?P<value>[^\n]*(\n\s+[^\n]*)*))+$'
-)
+REGEX_RFC822_POSTFIX = r'((^|\n)(?P<key>[A-Z]\w+(-\w+)*):(?P<value>[^\n]*(\n\s+[^\n]*)*))+$'
 # The special range value for git ranges against github pull requests
 GITHUB_PR = ':github/pr'
 
@@ -145,13 +143,8 @@ def _load_commit_schema(path=None, full=True):
 
     for entry_schema in user_schema:
         if 'label' not in entry_schema:
-            raise exceptions.SchemaError(
-                f'Entry in schema does not have label - {entry_schema}'
-            )
-        elif (
-            entry_schema.get('multiline')
-            and entry_schema['label'] != 'description'
-        ):
+            raise exceptions.SchemaError(f'Entry in schema does not have label - {entry_schema}')
+        elif entry_schema.get('multiline') and entry_schema['label'] != 'description':
             raise exceptions.SchemaError(
                 'Invalid schema for entry with label'
                 f' "{entry_schema["label"]}". Multi-line'
@@ -160,9 +153,7 @@ def _load_commit_schema(path=None, full=True):
 
     user_labels = {entry_schema['label'] for entry_schema in user_schema}
     schema = [
-        entry_schema
-        for entry_schema in default_schema
-        if entry_schema['label'] not in user_labels
+        entry_schema for entry_schema in default_schema if entry_schema['label'] not in user_labels
     ] + user_schema
 
     return formaldict.Schema(schema)
@@ -175,9 +166,7 @@ def _check_git_version():
     git_version = git_version_out[2]
 
     if version.parse(git_version) < version.parse('2.22.0'):
-        raise RuntimeError(
-            f'Must have git version >= 2.22.0 (version = {git_version})'
-        )
+        raise RuntimeError(f'Must have git version >= 2.22.0 (version = {git_version})')
 
 
 def _format_commit_attr(key, value):
@@ -187,9 +176,7 @@ def _format_commit_attr(key, value):
     """
     if key == 'trailers':
         value = {
-            trailer_key.strip()
-            .lower()
-            .replace('-', '_'): trailer_value.strip()
+            trailer_key.strip().lower().replace('-', '_'): trailer_value.strip()
             for trailer in value
             for trailer_key, trailer_value in trailer.items()
         }
@@ -226,9 +213,7 @@ class Tag(collections.UserString):
             describe_cmd += f' --match={tag_match}'
 
         rev = (
-            utils.shell_stdout(
-                describe_cmd, check=False, stderr=subprocess.PIPE
-            )
+            utils.shell_stdout(describe_cmd, check=False, stderr=subprocess.PIPE)
             .replace('~', ':')
             .replace('^', ':')
         )
@@ -281,8 +266,7 @@ class Commit(collections.UserString):
 
             # Format commit attributes
             commit_data = {
-                key: _format_commit_attr(key, value)
-                for key, value in commit_data.items()
+                key: _format_commit_attr(key, value) for key, value in commit_data.items()
             }
 
             # Flatten attributes
@@ -403,11 +387,7 @@ class Commits(collections.abc.Sequence):
             `Commits`: The filtered commits.
         """
         return Commits(
-            [
-                commit
-                for commit in self
-                if _equals(getattr(commit, attr), value, match=match)
-            ]
+            [commit for commit in self if _equals(getattr(commit, attr), value, match=match)]
         )
 
     def exclude(self, attr, value, match=False):
@@ -423,11 +403,7 @@ class Commits(collections.abc.Sequence):
             `Commits`: The excluded commits.
         """
         return Commits(
-            [
-                commit
-                for commit in self
-                if not _equals(getattr(commit, attr), value, match=match)
-            ]
+            [commit for commit in self if not _equals(getattr(commit, attr), value, match=match)]
         )
 
     def group(
@@ -453,24 +429,18 @@ class Commits(collections.abc.Sequence):
             `collections.OrderedDict`: A dictionary of `Commits` keyed on
             groups.
         """
-        if any([ascending_keys, descending_keys]) and not any(
-            [none_key_first, none_key_last]
-        ):
+        if any([ascending_keys, descending_keys]) and not any([none_key_first, none_key_last]):
             # If keys are sorted, default to making the "None" key last
             none_key_last = True
 
         # Get the natural ordering of the keys
         keys = list(
-            collections.OrderedDict(
-                (getattr(commit, attr), True) for commit in self
-            ).keys()
+            collections.OrderedDict((getattr(commit, attr), True) for commit in self).keys()
         )
 
         # Re-sort the keys
         if any([ascending_keys, descending_keys]):
-            sorted_keys = sorted(
-                (k for k in keys if k is not None), reverse=descending_keys
-            )
+            sorted_keys = sorted((k for k in keys if k is not None), reverse=descending_keys)
             if None in keys:
                 sorted_keys.append(None)
 
@@ -481,9 +451,7 @@ class Commits(collections.abc.Sequence):
             keys.remove(None)
             keys.insert(0 if none_key_first else len(keys), None)
 
-        return collections.OrderedDict(
-            (key, self.filter(attr, key)) for key in keys
-        )
+        return collections.OrderedDict((key, self.filter(attr, key)) for key in keys)
 
 
 def _get_pull_request_range():
@@ -563,9 +531,7 @@ class CommitRange(Commits):
     from the current branch (if found).
     """
 
-    def __init__(
-        self, range='', tag_match=None, before=None, after=None, reverse=False
-    ):
+    def __init__(self, range='', tag_match=None, before=None, after=None, reverse=False):
         self._schema = _load_commit_schema()
         self._tag_match = tag_match
         self._before = before
@@ -594,10 +560,7 @@ class CommitRange(Commits):
         self._range = range
 
         return super().__init__(
-            [
-                Commit(msg, self._schema, tag_match=self._tag_match)
-                for msg in git_yaml_logs
-            ]
+            [Commit(msg, self._schema, tag_match=self._tag_match) for msg in git_yaml_logs]
         )
 
 
@@ -835,9 +798,7 @@ def squash(ref, no_verify=False, allow_empty=False):
     try:
         # Prompt for the new commit message. Reset back to the last point
         # if anything goes wrong
-        commit_result = commit(
-            allow_empty=allow_empty, no_verify=no_verify, defaults=defaults
-        )
+        commit_result = commit(allow_empty=allow_empty, no_verify=no_verify, defaults=defaults)
     except (Exception, KeyboardInterrupt):
         utils.shell('git reset ORIG_HEAD')
         raise

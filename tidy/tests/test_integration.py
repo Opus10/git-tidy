@@ -106,8 +106,7 @@ def git_tidy_repo(tidy_config):
         'Description1\n\nType: api-break\nJira: WEB-1111"'
     )
     utils.shell(
-        'git commit --allow-empty -m $"Summary2\n\nDescription2\n\n'
-        'Type: bug\nJira: WEB-1112"'
+        'git commit --allow-empty -m $"Summary2\n\nDescription2\n\n' 'Type: bug\nJira: WEB-1112"'
     )
     utils.shell('git tag v1.1')
     utils.shell('git commit --allow-empty -m $"Summary3\n\nType: trivial"')
@@ -117,10 +116,7 @@ def git_tidy_repo(tidy_config):
         'git commit --allow-empty -m $"Summary4\n\nDescription4\n\n'
         'Type: feature\nJira: WEB-1113"'
     )
-    utils.shell(
-        'git commit --allow-empty -m $"Invalid5\n\n'
-        'Type: feature\nJira: INVALID"'
-    )
+    utils.shell('git commit --allow-empty -m $"Invalid5\n\n' 'Type: feature\nJira: INVALID"')
     # Create a commit that uses the same delimiter structure as git-tidy
     # to create a scenario of an unparseable commit.
     utils.shell('git commit --allow-empty -m $"Invalid6\n\nUnparseable: *{*"')
@@ -152,9 +148,7 @@ def test_commit_properties_and_range_filtering(mocker):
     cr = core.CommitRange()
 
     # Check various commit properties
-    invalid_commit = list(
-        cr.filter('is_valid', False).filter('is_parsed', True)
-    )[0]
+    invalid_commit = list(cr.filter('is_valid', False).filter('is_parsed', True))[0]
     assert (
         str(invalid_commit.validation_errors)
         == 'jira: Value "INVALID" does not match pattern "WEB-[\\d]+".'
@@ -215,9 +209,11 @@ def test_commit_properties_and_range_filtering(mocker):
         'dev1.2',
         'v1.1',
     ]
-    assert list(
-        cr.group('tag', descending_keys=True, none_key_first=True)
-    ) == [None, 'v1.1', 'dev1.2']
+    assert list(cr.group('tag', descending_keys=True, none_key_first=True)) == [
+        None,
+        'v1.1',
+        'dev1.2',
+    ]
 
     # Try matching on the v* tags (no dev tags)
     cr = core.CommitRange(tag_match='v*')
@@ -229,15 +225,10 @@ def test_commit_properties_and_range_filtering(mocker):
     assert not list(core.CommitRange(after='2019-01-01', before='2019-01-01'))
 
     # Try reversing commits
-    assert (
-        list(core.CommitRange(tag_match='v*', reverse=True))[0].type
-        == 'api-break'
-    )
+    assert list(core.CommitRange(tag_match='v*', reverse=True))[0].type == 'api-break'
 
     # Get a commit range over a github PR
-    mocker.patch(
-        'tidy.core._get_pull_request_range', autospec=True, return_value=''
-    )
+    mocker.patch('tidy.core._get_pull_request_range', autospec=True, return_value='')
 
     cr = core.CommitRange(':github/pr')
     assert len(cr) == 6
@@ -291,9 +282,7 @@ def test_commit_properties_and_range_filtering(mocker):
 @pytest.mark.usefixtures('git_tidy_repo')
 def test_commit(mocker, input_data):
     """Tests core.commit and verifies the resulting commit object."""
-    mocker.patch.object(
-        formaldict.Schema, 'prompt', autospec=True, return_value=input_data
-    )
+    mocker.patch.object(formaldict.Schema, 'prompt', autospec=True, return_value=input_data)
 
     with open('file_to_commit', 'w+') as f:
         f.write('Hello World')
@@ -310,9 +299,7 @@ def test_commit(mocker, input_data):
 @pytest.mark.usefixtures('git_tidy_repo')
 def test_empty_commit(mocker):
     """Tests core.commit() with empty commit and no commit message"""
-    mocker.patch.object(
-        formaldict.Schema, 'prompt', autospec=True, return_value={}
-    )
+    mocker.patch.object(formaldict.Schema, 'prompt', autospec=True, return_value={})
 
     # Git does not allow empty commit messages
     assert core.commit(allow_empty=True).returncode == 1
@@ -356,9 +343,7 @@ def test_lint(any):
     assert len(commits) == 6
 
 
-@pytest.mark.parametrize(
-    'output', [None, 'output_file', io.StringIO(), ':github/pr']
-)
+@pytest.mark.parametrize('output', [None, 'output_file', io.StringIO(), ':github/pr'])
 @pytest.mark.usefixtures('git_tidy_repo')
 def test_log(output, mocker):
     """Tests core.log() with various output targets"""
@@ -385,9 +370,7 @@ def test_log(output, mocker):
         ('default', does_not_raise()),
         (
             'custom',
-            pytest.raises(
-                jinja2.exceptions.TemplateNotFound, match='log_custom.tpl'
-            ),
+            pytest.raises(jinja2.exceptions.TemplateNotFound, match='log_custom.tpl'),
         ),
     ],
 )

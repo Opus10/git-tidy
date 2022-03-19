@@ -2,12 +2,12 @@ version: 2.1
 
 executors:
   python:
-    working_directory: ~/git-tidy
+    working_directory: /code
     docker:
       - image: opus10/circleci-public-python-library
         environment:
-          # Ensure makefile commands are not wrapped in "docker run"
-          MAKE_CMD_WRAPPER: ''
+          # Ensure makefile commands are not wrapped in "docker exec"
+          DOCKER_EXEC_WRAPPER: ''
 
 jobs:
   test:
@@ -21,10 +21,9 @@ jobs:
       - save_cache:
           key: v1-{{ checksum "poetry.lock" }}
           paths:
-            - /home/circleci/.local
-            - /home/circleci/.cache/pypoetry/virtualenvs
-            - /home/circleci/git-tidy/.venv
-            - /home/circleci/git-tidy/.tox
+            - /home/circleci/.cache/pypoetry/
+            - /code/.venv
+            - /code/.tox
 
   lint:
     executor: python

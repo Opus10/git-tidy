@@ -1,11 +1,26 @@
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry_core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.black]
-line-length = 79
+line-length = 99
 target-version = ['py37']
 skip-string-normalization = true
+
+[tool.coverage.run]
+branch = true
+source = ["tidy"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "pass",
+    "pytest.mark.skip"
+]
+show_missing = true
+fail_under = 100
 
 [tool.poetry]
 name = "git-tidy"
@@ -65,3 +80,9 @@ git-tidy-commit = 'tidy.cli:commit'
 git-tidy-lint = 'tidy.cli:lint'
 git-tidy-log = 'tidy.cli:log'
 git-tidy-squash = 'tidy.cli:squash'
+
+[tool.pytest.ini_options]
+xfail_strict = true
+testpaths = "tidy/tests"
+norecursedirs = ".venv"
+
