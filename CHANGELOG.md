@@ -1,4 +1,8 @@
 # Changelog
+## 1.1.4 (2022-07-30)
+### Trivial
+  - Updates with latest Python template, fixing doc builds [Opus 10 Devops, d24c01b]
+
 ## 1.1.3 (2022-03-19)
 ### Trivial
   - Updated with the latest template, which upgrades local Docker development [Opus 10 Devops, 9a5a1b6]
