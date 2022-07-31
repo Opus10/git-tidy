@@ -11,6 +11,7 @@ from tidy.core import lint
 from tidy.core import log
 from tidy.core import squash
 from tidy.core import Tag
+from tidy.version import __version__
 
 
 __all__ = [
@@ -22,4 +23,5 @@ __all__ = [
     'Commits',
     'CommitRange',
     'Tag',
+    '__version__',
 ]

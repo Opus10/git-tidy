@@ -23,6 +23,8 @@ import subprocess
 
 import sphinx_rtd_theme
 
+import tidy
+
 
 # -- Helper functions -----------------------------------------------------
 
@@ -77,7 +79,7 @@ author = u'Opus 10 Engineering'
 # built documents.
 #
 # The short X.Y version.
-version = _shell_stdout("poetry version | rev | cut -f 1 -d' ' | rev")
+version = tidy.__version__
 
 # The full version, including alpha/beta/rc tags.
 release = version
