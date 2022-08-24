@@ -1,5 +1,9 @@
 # Changelog
-## 1.1.4 (2022-07-30)
+## 1.1.5 (2022-08-24)
+### Trivial
+  - Update with the latest Python library template [Opus 10 Devops, f7ae7e2]
+
+## 1.1.4 (2022-07-31)
 ### Trivial
   - Updates with latest Python template, fixing doc builds [Opus 10 Devops, d24c01b]
 
