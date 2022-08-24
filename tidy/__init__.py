@@ -15,13 +15,13 @@ from tidy.version import __version__
 
 
 __all__ = [
-    'commit',
-    'lint',
-    'log',
-    'squash',
-    'Commit',
-    'Commits',
-    'CommitRange',
-    'Tag',
-    '__version__',
+    "commit",
+    "lint",
+    "log",
+    "squash",
+    "Commit",
+    "Commits",
+    "CommitRange",
+    "Tag",
+    "__version__",
 ]

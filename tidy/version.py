@@ -3,4 +3,4 @@ try:
 except ImportError:
     import importlib_metadata as metadata
 
-__version__ = metadata.version('git-tidy')
+__version__ = metadata.version("git-tidy")
