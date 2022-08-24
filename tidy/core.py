@@ -35,9 +35,9 @@ DEFAULT_LOG_TEMPLATE = """
 {% endfor %}
 """
 # Used for parsing descriptions from git commits and excluding trailers
-REGEX_RFC822_POSTFIX = r'((^|\n)(?P<key>[A-Z]\w+(-\w+)*):(?P<value>[^\n]*(\n\s+[^\n]*)*))+$'
+REGEX_RFC822_POSTFIX = r"((^|\n)(?P<key>[A-Z]\w+(-\w+)*):(?P<value>[^\n]*(\n\s+[^\n]*)*))+$"
 # The special range value for git ranges against github pull requests
-GITHUB_PR = ':github/pr'
+GITHUB_PR = ":github/pr"
 
 
 def _output(*, value, path):
@@ -54,7 +54,7 @@ def _output(*, value, path):
             ``None``, nothing is written.
     """
     if isinstance(path, str) and path != GITHUB_PR:
-        with open(path, 'w+') as f:
+        with open(path, "w+") as f:
             f.write(value)
     elif isinstance(path, str) and path == GITHUB_PR:
         github.comment(value)
@@ -70,90 +70,90 @@ def _load_commit_schema(path=None, full=True):
     when performing a tidy commit. Other attributes of a commit
     are needed when linting/logging the commits
     """
-    path = path or utils.get_tidy_file_path('commit.yaml')
+    path = path or utils.get_tidy_file_path("commit.yaml")
 
     default_schema = [
         {
-            'label': 'summary',
-            'name': 'Summary',
-            'help': 'A high-level summary of the commit.',
-            'type': 'string',
+            "label": "summary",
+            "name": "Summary",
+            "help": "A high-level summary of the commit.",
+            "type": "string",
         },
         {
-            'label': 'description',
-            'name': 'Description',
-            'help': 'An in-depth description of the changes.',
-            'type': 'string',
-            'multiline': True,
-            'required': False,
+            "label": "description",
+            "name": "Description",
+            "help": "An in-depth description of the changes.",
+            "type": "string",
+            "multiline": True,
+            "required": False,
         },
     ]
 
     if full:
         default_schema += [
             {
-                'label': 'sha',
-                'name': 'SHA',
-                'help': 'Full SHA of the commit.',
-                'type': 'string',
+                "label": "sha",
+                "name": "SHA",
+                "help": "Full SHA of the commit.",
+                "type": "string",
             },
             {
-                'label': 'author_name',
-                'name': 'Author Name',
-                'help': 'The author name of the commit.',
-                'type': 'string',
+                "label": "author_name",
+                "name": "Author Name",
+                "help": "The author name of the commit.",
+                "type": "string",
             },
             {
-                'label': 'author_email',
-                'name': 'Author Email',
-                'help': 'The author email of the commit.',
-                'type': 'string',
+                "label": "author_email",
+                "name": "Author Email",
+                "help": "The author email of the commit.",
+                "type": "string",
             },
             {
-                'label': 'author_date',
-                'name': 'Author Date',
-                'help': 'The time at which the commit was authored.',
-                'type': 'datetime',
+                "label": "author_date",
+                "name": "Author Date",
+                "help": "The time at which the commit was authored.",
+                "type": "datetime",
             },
             {
-                'label': 'committer_name',
-                'name': 'Committer Name',
-                'help': 'The name of the person who performed the commit.',
-                'type': 'string',
+                "label": "committer_name",
+                "name": "Committer Name",
+                "help": "The name of the person who performed the commit.",
+                "type": "string",
             },
             {
-                'label': 'committer_email',
-                'name': 'Committer Email',
-                'help': 'The email of the person who performed the commit.',
-                'type': 'string',
+                "label": "committer_email",
+                "name": "Committer Email",
+                "help": "The email of the person who performed the commit.",
+                "type": "string",
             },
             {
-                'label': 'committer_date',
-                'name': 'Committer Date',
-                'help': 'The time at which the commit was performed.',
-                'type': 'datetime',
+                "label": "committer_date",
+                "name": "Committer Date",
+                "help": "The time at which the commit was performed.",
+                "type": "datetime",
             },
         ]
 
     try:
-        with open(path, 'r') as schema_f:
+        with open(path, "r") as schema_f:
             user_schema = yaml.safe_load(schema_f)
     except IOError:
         user_schema = []
 
     for entry_schema in user_schema:
-        if 'label' not in entry_schema:
-            raise exceptions.SchemaError(f'Entry in schema does not have label - {entry_schema}')
-        elif entry_schema.get('multiline') and entry_schema['label'] != 'description':
+        if "label" not in entry_schema:
+            raise exceptions.SchemaError(f"Entry in schema does not have label - {entry_schema}")
+        elif entry_schema.get("multiline") and entry_schema["label"] != "description":
             raise exceptions.SchemaError(
-                'Invalid schema for entry with label'
+                "Invalid schema for entry with label"
                 f' "{entry_schema["label"]}". Multi-line'
-                ' input is only allowed for the commit description.'
+                " input is only allowed for the commit description."
             )
 
-    user_labels = {entry_schema['label'] for entry_schema in user_schema}
+    user_labels = {entry_schema["label"] for entry_schema in user_schema}
     schema = [
-        entry_schema for entry_schema in default_schema if entry_schema['label'] not in user_labels
+        entry_schema for entry_schema in default_schema if entry_schema["label"] not in user_labels
     ] + user_schema
 
     return formaldict.Schema(schema)
@@ -161,12 +161,12 @@ def _load_commit_schema(path=None, full=True):
 
 def _check_git_version():
     """Verify git version"""
-    git_version_out = utils.shell_stdout("git --version").split(' ')
+    git_version_out = utils.shell_stdout("git --version").split(" ")
     assert len(git_version_out) >= 2
     git_version = git_version_out[2]
 
-    if version.parse(git_version) < version.parse('2.22.0'):
-        raise RuntimeError(f'Must have git version >= 2.22.0 (version = {git_version})')
+    if version.parse(git_version) < version.parse("2.22.0"):
+        raise RuntimeError(f"Must have git version >= 2.22.0 (version = {git_version})")
 
 
 def _format_commit_attr(key, value):
@@ -174,20 +174,20 @@ def _format_commit_attr(key, value):
     After parsing commits into yaml, format the values of the parsed
     key/value pairs
     """
-    if key == 'trailers':
+    if key == "trailers":
         value = {
-            trailer_key.strip().lower().replace('-', '_'): trailer_value.strip()
+            trailer_key.strip().lower().replace("-", "_"): trailer_value.strip()
             for trailer in value
             for trailer_key, trailer_value in trailer.items()
         }
-    elif key == 'description':
+    elif key == "description":
         # Remove trailers from the description
         match = re.search(REGEX_RFC822_POSTFIX, value)
         if match is not None:
             description_end = match.start()
             value = value[:description_end].strip()
 
-    if key != 'trailers' and isinstance(value, str):
+    if key != "trailers" and isinstance(value, str):
         value = value.strip()
 
     return value
@@ -208,16 +208,16 @@ class Tag(collections.UserString):
         Returns:
             Tag: A constructed tag or ``None`` if no tags contain the commit.
         """
-        describe_cmd = f'git describe {sha} --contains'
+        describe_cmd = f"git describe {sha} --contains"
         if tag_match:
-            describe_cmd += f' --match={tag_match}'
+            describe_cmd += f" --match={tag_match}"
 
         rev = (
             utils.shell_stdout(describe_cmd, check=False, stderr=subprocess.PIPE)
-            .replace('~', ':')
-            .replace('^', ':')
+            .replace("~", ":")
+            .replace("^", ":")
         )
-        return cls(rev.split(':')[0]) if rev else None
+        return cls(rev.split(":")[0]) if rev else None
 
     @property
     def date(self):
@@ -227,10 +227,10 @@ class Tag(collections.UserString):
         Returns:
             datetime: The tag parsed as a datetime object.
         """
-        if not hasattr(self, '_date'):
+        if not hasattr(self, "_date"):
             try:
                 self._date = dateutil.parser.parse(
-                    utils.shell_stdout(f'git log -1 --format=%ad {self}')
+                    utils.shell_stdout(f"git log -1 --format=%ad {self}")
                 )
             except dateutil.parser.ParserError:
                 self._date = None
@@ -271,8 +271,8 @@ class Commit(collections.UserString):
 
             # Flatten attributes
             commit_data = {
-                **{k: v for k, v in commit_data.items() if k != 'trailers'},
-                **commit_data['trailers'],
+                **{k: v for k, v in commit_data.items() if k != "trailers"},
+                **commit_data["trailers"],
             }
 
             # Parse the commit data
@@ -281,15 +281,15 @@ class Commit(collections.UserString):
         except Exception as exc:
             # If the yaml data cannot be parsed, construct a special
             # formal dictionary object with an appropriate error
-            match = re.match(r'sha: (?P<sha>[a-fA-F\d]+)\n', msg)
-            sha = match.group('sha')
+            match = re.match(r"sha: (?P<sha>[a-fA-F\d]+)\n", msg)
+            sha = match.group("sha")
             errors = formaldict.Errors()
             errors.add(exceptions.CommitParseError(str(exc)))
 
             self.schema_data = formaldict.FormalDict(
                 schema=schema,
-                parsed={'sha': sha},
-                data={'sha': sha},
+                parsed={"sha": sha},
+                data={"sha": sha},
                 errors=errors,
             )
             self._is_parsed = False
@@ -339,7 +339,7 @@ class Commit(collections.UserString):
     @property
     def tag(self):
         """Returns a `Tag` that contains the commit"""
-        if not hasattr(self, '_tag'):
+        if not hasattr(self, "_tag"):
             self._tag = Tag.from_sha(self.sha, tag_match=self._tag_match)
 
         return self._tag
@@ -456,7 +456,7 @@ class Commits(collections.abc.Sequence):
 
 def _get_pull_request_range():
     base = github.get_pull_request_base()
-    return f'{base}..'
+    return f"{base}.."
 
 
 def _git_log_as_yaml(git_log_cmd):
@@ -482,37 +482,37 @@ def _git_log_as_yaml(git_log_cmd):
     # sha: The full commit sha (%H). Must always be rendered first
     # author_name: The author name (%an)
     # author_email: The author email (%ae)
-    delimiter = '\n<-------->'
+    delimiter = "\n<-------->"
     git_log_stdout = utils.shell_stdout(
-        f'{git_log_cmd} '
+        f"{git_log_cmd} "
         '--format="'
-        'sha: %H%n'
-        'author_name: %an%n'
-        'author_email: %ae%n'
-        'author_date: %ad%n'
-        'committer_name: %cn%n'
-        'committer_email: %ce%n'
-        'committer_date: %cd%n'
-        'summary: |%n%w(0, 4, 4)%s%n%w(0, 0, 0)'
-        'description: |%n%w(0, 4, 4)%b%n%w(0, 0, 0)'
-        'trailers: [*{*%(trailers:separator=*%x7d*%x2c*%x7b*)*}*]'
+        "sha: %H%n"
+        "author_name: %an%n"
+        "author_email: %ae%n"
+        "author_date: %ad%n"
+        "committer_name: %cn%n"
+        "committer_email: %ce%n"
+        "committer_date: %cd%n"
+        "summary: |%n%w(0, 4, 4)%s%n%w(0, 0, 0)"
+        "description: |%n%w(0, 4, 4)%b%n%w(0, 0, 0)"
+        "trailers: [*{*%(trailers:separator=*%x7d*%x2c*%x7b*)*}*]"
         f'%n{delimiter}"'
     )
 
     # Escape any double quotes used in trailers
     git_log_stdout = re.sub(
-        r'^trailers:.*$',
-        lambda x: x.group().replace('"', r'\"'),
+        r"^trailers:.*$",
+        lambda x: x.group().replace('"', r"\""),
         git_log_stdout,
         flags=re.MULTILINE,
     )
     # Format all empty trailer dictionaries. This only happens when
     # there are no trailers
-    git_log_stdout = re.sub(r'\*{\*\*}\*', r'{}', git_log_stdout)
+    git_log_stdout = re.sub(r"\*{\*\*}\*", r"{}", git_log_stdout)
 
     # Quote all trailer values
-    git_log_stdout = re.sub(r'\*{\*(\w+: )', r'{\1"', git_log_stdout)
-    git_log_stdout = re.sub(r'\*}\*', r'"}', git_log_stdout)
+    git_log_stdout = re.sub(r"\*{\*(\w+: )", r'{\1"', git_log_stdout)
+    git_log_stdout = re.sub(r"\*}\*", r'"}', git_log_stdout)
 
     return [msg for msg in git_log_stdout.split(delimiter) if msg]
 
@@ -531,7 +531,7 @@ class CommitRange(Commits):
     from the current branch (if found).
     """
 
-    def __init__(self, range='', tag_match=None, before=None, after=None, reverse=False):
+    def __init__(self, range="", tag_match=None, before=None, after=None, reverse=False):
         self._schema = _load_commit_schema()
         self._tag_match = tag_match
         self._before = before
@@ -545,15 +545,15 @@ class CommitRange(Commits):
             range = _get_pull_request_range()
 
         # Ensure any remotes are fetched
-        utils.shell('git --no-pager fetch -q')
+        utils.shell("git --no-pager fetch -q")
 
-        git_log_cmd = f'git --no-pager log {range} --no-merges'
+        git_log_cmd = f"git --no-pager log {range} --no-merges"
         if before:
-            git_log_cmd += f' --before={before}'
+            git_log_cmd += f" --before={before}"
         if after:
-            git_log_cmd += f' --after={after}'
+            git_log_cmd += f" --after={after}"
         if reverse:
-            git_log_cmd += ' --reverse'
+            git_log_cmd += " --reverse"
 
         git_yaml_logs = _git_log_as_yaml(git_log_cmd)
 
@@ -582,7 +582,7 @@ def commit_template(output=None):
         loader=jinja2.FileSystemLoader(utils.get_tidy_file_root()),
         trim_blocks=True,
     )
-    template = env.get_template('commit.tpl')
+    template = env.get_template("commit.tpl")
     rendered = template.render(schema=schema)
 
     _output(path=output, value=rendered)
@@ -609,8 +609,8 @@ def commit(no_verify=False, allow_empty=False, defaults=None):
     """
     # Run pre-commit hooks manually so that the commit will fail
     # before prompting the user for information
-    hooks_path = utils.shell_stdout('git rev-parse --git-path hooks')
-    pre_commit_hook = os.path.join(hooks_path, 'pre-commit')
+    hooks_path = utils.shell_stdout("git rev-parse --git-path hooks")
+    pre_commit_hook = os.path.join(hooks_path, "pre-commit")
     if not no_verify and os.path.exists(pre_commit_hook):
         result = utils.shell(pre_commit_hook, check=False)
         if result.returncode:
@@ -619,39 +619,39 @@ def commit(no_verify=False, allow_empty=False, defaults=None):
     # If there are no staged changes and we are not allowing empty
     # commits (the default git commit mode), short circuit and run
     # a failing git commit
-    staged_changes = utils.shell_stdout('git diff --cached')
+    staged_changes = utils.shell_stdout("git diff --cached")
     if not staged_changes and not allow_empty:
-        return utils.shell('git commit --no-verify', check=False)
+        return utils.shell("git commit --no-verify", check=False)
 
     schema = _load_commit_schema(full=False)
     entry = schema.prompt(defaults=defaults)
 
     # Render the commit message from the validated entry
-    commit_msg = ''
-    if 'summary' in entry:
+    commit_msg = ""
+    if "summary" in entry:
         commit_msg += f'{entry["summary"].strip()}\n\n'
-    if 'description' in entry:
+    if "description" in entry:
         commit_msg += f'{entry["description"].strip()}\n\n'
 
     for key, value in entry.items():
-        if key not in ['summary', 'description']:
-            key = key.replace('_', ' ').title().replace('_', '-').strip()
-            commit_msg += f'{key}: {value.strip()}\n'
+        if key not in ["summary", "description"]:
+            key = key.replace("_", " ").title().replace("_", "-").strip()
+            commit_msg += f"{key}: {value.strip()}\n"
 
     commit_msg = commit_msg.strip()
 
     # Commit with git
-    commit_cmd = 'git commit --no-verify'
+    commit_cmd = "git commit --no-verify"
     if allow_empty:
-        commit_cmd += ' --allow-empty'
-    with tempfile.NamedTemporaryFile(mode='w+') as commit_file:
+        commit_cmd += " --allow-empty"
+    with tempfile.NamedTemporaryFile(mode="w+") as commit_file:
         commit_file.write(commit_msg)
         commit_file.flush()
 
-        return utils.shell(f'{commit_cmd} -F {commit_file.name}', check=False)
+        return utils.shell(f"{commit_cmd} -F {commit_file.name}", check=False)
 
 
-def lint(range='', any=False):
+def lint(range="", any=False):
     """
     Lint commits against an upstream (branch, sha, etc).
 
@@ -676,14 +676,14 @@ def lint(range='', any=False):
     """
     commits = CommitRange(range=range)
     if not any:
-        return not commits.filter('is_valid', False), commits
+        return not commits.filter("is_valid", False), commits
     else:
-        return bool(commits.filter('is_valid', True)), commits
+        return bool(commits.filter("is_valid", True)), commits
 
 
 def log(
-    range='',
-    style='default',
+    range="",
+    style="default",
     tag_match=None,
     before=None,
     after=None,
@@ -735,11 +735,11 @@ def log(
         loader=jinja2.FileSystemLoader(utils.get_tidy_file_root()),
         trim_blocks=True,
     )
-    template_file = 'log.tpl' if style == 'default' else f'log_{style}.tpl'
+    template_file = "log.tpl" if style == "default" else f"log_{style}.tpl"
     try:
         template = env.get_template(template_file)
     except jinja2.exceptions.TemplateNotFound:
-        if style == 'default':
+        if style == "default":
             # Use the default tidy template if the user didn't provide one
             template = jinja2.Template(DEFAULT_LOG_TEMPLATE, trim_blocks=True)
         else:
@@ -778,32 +778,32 @@ def squash(ref, no_verify=False, allow_empty=False):
         commit result.
     """
     ref = github.get_pull_request_base() if ref == GITHUB_PR else ref
-    range = f'{ref}..'
+    range = f"{ref}.."
 
     commits = CommitRange(range=range)
     if not commits:
-        raise exceptions.NoSquashableCommitsError('No commits to squash')
+        raise exceptions.NoSquashableCommitsError("No commits to squash")
 
     # If there is a valid commit, use it as the default values for the
     # squashed commit message. Note that we look for the last valid commit
-    valid_commits = commits.filter('is_valid', True)
+    valid_commits = commits.filter("is_valid", True)
     last_valid_commit = valid_commits[-1] if valid_commits else None
 
     defaults = last_valid_commit.schema_data if last_valid_commit else {}
 
     # Reset to the common ancestor of the ref point
-    common_ancestor = utils.shell_stdout(f'git merge-base {ref} HEAD')
-    utils.shell(f'git reset --soft {common_ancestor}')
+    common_ancestor = utils.shell_stdout(f"git merge-base {ref} HEAD")
+    utils.shell(f"git reset --soft {common_ancestor}")
 
     try:
         # Prompt for the new commit message. Reset back to the last point
         # if anything goes wrong
         commit_result = commit(allow_empty=allow_empty, no_verify=no_verify, defaults=defaults)
     except (Exception, KeyboardInterrupt):
-        utils.shell('git reset ORIG_HEAD')
+        utils.shell("git reset ORIG_HEAD")
         raise
 
     if commit_result.returncode != 0:
-        utils.shell('git reset ORIG_HEAD')
+        utils.shell("git reset ORIG_HEAD")
 
     return commit_result

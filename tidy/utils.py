@@ -14,15 +14,15 @@ def shell(cmd, check=True, stdin=None, stdout=None, stderr=None):
 def shell_stdout(cmd, check=True, stdin=None, stderr=None):
     """Runs a shell command and returns stdout"""
     ret = shell(cmd, stdout=subprocess.PIPE, check=check, stdin=stdin, stderr=stderr)
-    return ret.stdout.decode('utf-8').strip() if ret.stdout else ''
+    return ret.stdout.decode("utf-8").strip() if ret.stdout else ""
 
 
 def get_tidy_file_root():
     """
     Get the root path of tidy files
     """
-    top_level = shell_stdout('git rev-parse --show-toplevel')
-    return os.path.join(top_level, '.git-tidy')
+    top_level = shell_stdout("git rev-parse --show-toplevel")
+    return os.path.join(top_level, ".git-tidy")
 
 
 def get_tidy_file_path(name):
