@@ -1,4 +1,13 @@
 # Changelog
+## 1.2.0 (2023-03-26)
+### Bug
+  - Fix errors parsing hyphenated trailers [Wesley Kendall, 1938c49]
+
+    Trailers such as Co-authored-by were not correctly parsed by git-tidy.
+    Users can now correctly supply hyphenated trailers manually, and they
+    can also specify attributes with underscores in the commit message
+    schema.
+
 ## 1.1.5 (2022-08-24)
 ### Trivial
   - Update with the latest Python library template [Opus 10 Devops, f7ae7e2]
