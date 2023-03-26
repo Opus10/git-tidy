@@ -55,6 +55,11 @@ def tidy_config(tmp_path, mocker):
         "  type: string\n"
         "  required: false\n"
         '  condition: ["!=", "type", "trivial"]\n'
+        "\n"
+        "- label: multi_word\n"
+        "  type: string\n"
+        "  required: false\n"
+        '  condition: ["!=", "type", "trivial"]\n'
     )
 
     tidy_commit_template = tidy_root / "log.tpl"
@@ -99,6 +104,7 @@ def git_tidy_repo(tidy_config):
     os.chdir(tidy_config)
 
     utils.shell("git init .")
+    utils.shell("git branch -m master", check=False)
     utils.shell('git config user.email "you@example.com"')
     utils.shell('git config user.name "Your Name"')
     utils.shell(
@@ -258,6 +264,7 @@ def test_commit_properties_and_range_filtering(mocker):
             "description": "description",
             "jira": "",
             "component": "",
+            "multi_word": "",
         },
         # Tests where a key in the middle of the final message is empty
         {
@@ -266,6 +273,7 @@ def test_commit_properties_and_range_filtering(mocker):
             "description": "description",
             "jira": "",
             "component": "django",
+            "multi_word": "hello",
         },
         # Tests committing key with double quotes
         {
@@ -274,6 +282,7 @@ def test_commit_properties_and_range_filtering(mocker):
             "description": '"description"',
             "jira": "",
             "component": '"""',
+            "multi_word": "",
         },
         # Tests no trailers
         {"summary": "summary"},
