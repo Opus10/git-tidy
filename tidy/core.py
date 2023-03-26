@@ -483,7 +483,8 @@ def _git_log_as_yaml(git_log_cmd):
     # author_name: The author name (%an)
     # author_email: The author email (%ae)
     delimiter = "\n<-------->"
-    git_log_stdout = utils.shell_stdout(
+
+    git_log_cmd = (
         f"{git_log_cmd} "
         '--format="'
         "sha: %H%n"
@@ -498,6 +499,7 @@ def _git_log_as_yaml(git_log_cmd):
         "trailers: [*{*%(trailers:separator=*%x7d*%x2c*%x7b*)*}*]"
         f'%n{delimiter}"'
     )
+    git_log_stdout = utils.shell_stdout(git_log_cmd)
 
     # Escape any double quotes used in trailers
     git_log_stdout = re.sub(
@@ -511,7 +513,7 @@ def _git_log_as_yaml(git_log_cmd):
     git_log_stdout = re.sub(r"\*{\*\*}\*", r"{}", git_log_stdout)
 
     # Quote all trailer values
-    git_log_stdout = re.sub(r"\*{\*(\w+: )", r'{\1"', git_log_stdout)
+    git_log_stdout = re.sub(r"\*{\*([\w\-]+: )", r'{\1"', git_log_stdout)
     git_log_stdout = re.sub(r"\*}\*", r'"}', git_log_stdout)
 
     return [msg for msg in git_log_stdout.split(delimiter) if msg]
@@ -635,7 +637,7 @@ def commit(no_verify=False, allow_empty=False, defaults=None):
 
     for key, value in entry.items():
         if key not in ["summary", "description"]:
-            key = key.replace("_", " ").title().replace("_", "-").strip()
+            key = key.capitalize().replace("_", "-").strip()
             commit_msg += f"{key}: {value.strip()}\n"
 
     commit_msg = commit_msg.strip()
