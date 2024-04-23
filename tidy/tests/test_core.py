@@ -3,14 +3,13 @@
 Most of the test coverage of the core module is from the integration
 tests in tidy/tests/test_integration.py.
 """
+
 from contextlib import ExitStack as does_not_raise
 from unittest import mock
 
 import pytest
 
-from tidy import core
-from tidy import exceptions
-
+from tidy import core, exceptions
 
 # A user schema that overrides the default git tidy schema
 overridden_user_schema = """

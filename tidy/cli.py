@@ -11,6 +11,7 @@ Commands
 * ``git-tidy-lint`` - Validates structure of commit messages
 * ``git-tidy-squash`` - Squashes commit messages into a single tidy commit
 """
+
 import sys
 
 import click

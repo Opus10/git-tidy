@@ -1,15 +1,14 @@
 """Integration tests for git-tidy"""
-from contextlib import ExitStack as does_not_raise
+
 import io
 import os
+from contextlib import ExitStack as does_not_raise
 
 import formaldict
 import jinja2.exceptions
 import pytest
 
-from tidy import core
-from tidy import exceptions
-from tidy import utils
+from tidy import core, exceptions, utils
 
 
 @pytest.fixture()
@@ -162,7 +161,7 @@ def test_commit_properties_and_range_filtering(mocker):
     assert invalid_commit.type == "feature"
     assert not invalid_commit.is_valid
     with pytest.raises(AttributeError):
-        invalid_commit.invalid_attribute
+        invalid_commit.invalid_attribute  # noqa
     assert invalid_commit.msg.startswith("sha: ")
     assert invalid_commit.jira is None
     assert invalid_commit.tag is None
@@ -548,7 +547,7 @@ def test_squash_diverging_branches(mocker):
 def test_squash_no_commits(mocker):
     """Tests core.squash with no commits"""
     with pytest.raises(exceptions.NoSquashableCommitsError):
-        core.squash("HEAD").returncode
+        core.squash("HEAD").returncode  # noqa
 
 
 @pytest.mark.usefixtures("git_tidy_repo")
@@ -578,7 +577,7 @@ def test_squash_error_rollback(mocker):
     assert core.commit().returncode == 0
 
     # The first squash call throws an unexpected error and rolls back the reset
-    with pytest.raises(Exception):
+    with pytest.raises(Exception, match=""):
         core.squash("HEAD~1")
 
     assert utils.shell_stdout("git diff --cached") == ""

@@ -1,7 +1,9 @@
 _extensions:
 - jinja2_time.TimeExtension
-_template: git@github.com:Opus10/public-python-library-template.git
-_version: 5fbfe9d014bf85cc1f67a746032eef0da4f354cd
+_template: git@github.com:Opus10/python-library-template.git
+_version: 80d7f1ffae8953435935d7f1ef7d1e526a4be755
+check_types_in_ci: 'False'
+is_django: 'False'
 module_name: tidy
 repo_name: git-tidy
 short_description: Tidy git commit messages, linting, and logging

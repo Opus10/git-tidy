@@ -1,13 +1,13 @@
 """Tests for the tidy.github module"""
-from contextlib import ExitStack as does_not_raise
+
 import json
+from contextlib import ExitStack as does_not_raise
 from unittest import mock
 
 import pytest
 import requests
 
-from tidy import exceptions
-from tidy import github
+from tidy import exceptions, github
 
 
 @pytest.fixture(autouse=True)

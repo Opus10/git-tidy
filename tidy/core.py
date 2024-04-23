@@ -2,23 +2,26 @@
 The core git tidy API
 """
 
+from __future__ import annotations
+
 import collections.abc
 import io
 import os
 import re
 import subprocess
 import tempfile
+from typing import TYPE_CHECKING
 
 import dateutil.parser
 import formaldict
 import jinja2
-from packaging import version
 import yaml
+from packaging import version
 
-from tidy import exceptions
-from tidy import github
-from tidy import utils
+from tidy import exceptions, github, utils
 
+if TYPE_CHECKING:
+    from datetime import datetime
 
 # The default tidy log Jinja template
 DEFAULT_LOG_TEMPLATE = """
@@ -200,13 +203,13 @@ class Tag(collections.UserString):
         self.data = tag
 
     @classmethod
-    def from_sha(cls, sha, tag_match=None):
+    def from_sha(cls, sha, tag_match=None) -> Tag:
         """
         Create a Tag object from a sha or return None if there is no
         associated tag
 
         Returns:
-            Tag: A constructed tag or ``None`` if no tags contain the commit.
+            A constructed tag or ``None`` if no tags contain the commit.
         """
         describe_cmd = f"git describe {sha} --contains"
         if tag_match:
@@ -220,7 +223,7 @@ class Tag(collections.UserString):
         return cls(rev.split(":")[0]) if rev else None
 
     @property
-    def date(self):
+    def date(self) -> datetime:
         """
         Parse the date of the tag
 
@@ -374,7 +377,7 @@ class Commits(collections.abc.Sequence):
     def __len__(self):
         return len(self._commits)
 
-    def filter(self, attr, value, match=False):
+    def filter(self, attr, value, match=False) -> Commits:
         """Filter commits by an attribute
 
         Args:
@@ -384,13 +387,13 @@ class Commits(collections.abc.Sequence):
                 match against it.
 
         Returns:
-            `Commits`: The filtered commits.
+            The filtered commits.
         """
         return Commits(
             [commit for commit in self if _equals(getattr(commit, attr), value, match=match)]
         )
 
-    def exclude(self, attr, value, match=False):
+    def exclude(self, attr, value, match=False) -> Commits:
         """Exclude commits by an attribute
 
         Args:
@@ -400,7 +403,7 @@ class Commits(collections.abc.Sequence):
                 match against it.
 
         Returns:
-            `Commits`: The excluded commits.
+            The excluded commits.
         """
         return Commits(
             [commit for commit in self if not _equals(getattr(commit, attr), value, match=match)]
@@ -413,7 +416,7 @@ class Commits(collections.abc.Sequence):
         descending_keys=False,
         none_key_first=False,
         none_key_last=False,
-    ):
+    ) -> dict[str, Commits]:
         """Group commits by an attribute
 
         Args:
@@ -426,8 +429,7 @@ class Commits(collections.abc.Sequence):
             none_key_last (bool, default=False): Make the "None" key be last.
 
         Returns:
-            `collections.OrderedDict`: A dictionary of `Commits` keyed on
-            groups.
+            A dictionary of `Commits` keyed on groups.
         """
         if any([ascending_keys, descending_keys]) and not any([none_key_first, none_key_last]):
             # If keys are sorted, default to making the "None" key last
@@ -592,7 +594,7 @@ def commit_template(output=None):
     return rendered
 
 
-def commit(no_verify=False, allow_empty=False, defaults=None):
+def commit(no_verify=False, allow_empty=False, defaults=None) -> subprocess.CompletedProcess:
     """
     Performs a tidy git commit.
 
@@ -605,8 +607,7 @@ def commit(no_verify=False, allow_empty=False, defaults=None):
             when prompting for commit attributes.
 
     Returns:
-        subprocess.CompletedProcess: The result from running
-        git commit. Returns the git pre-commit hook results if
+        The result from running git commit. Returns the git pre-commit hook results if
         failing during hook execution.
     """
     # Run pre-commit hooks manually so that the commit will fail
@@ -653,7 +654,7 @@ def commit(no_verify=False, allow_empty=False, defaults=None):
         return utils.shell(f"{commit_cmd} -F {commit_file.name}", check=False)
 
 
-def lint(range="", any=False):
+def lint(range="", any=False) -> tuple[bool, CommitRange]:
     """
     Lint commits against an upstream (branch, sha, etc).
 
@@ -673,8 +674,7 @@ def lint(range="", any=False):
             the range and multiple pull requests are found.
 
     Returns:
-        tuple(bool, CommitRange): A tuple of the lint result (True/False)
-        and the associated CommitRange
+        A tuple of the lint result (True/False) and the associated CommitRange
     """
     commits = CommitRange(range=range)
     if not any:
@@ -691,7 +691,7 @@ def log(
     after=None,
     reverse=False,
     output=None,
-):
+) -> str:
     """
     Renders git logs using tidy rendering.
 
@@ -724,7 +724,7 @@ def log(
             the range and multiple pull requests are found.
 
     Returns:
-        str: The rendered tidy log.
+        The rendered tidy log.
     """
     commits = CommitRange(
         range=range,
@@ -753,7 +753,7 @@ def log(
     return rendered
 
 
-def squash(ref, no_verify=False, allow_empty=False):
+def squash(ref, no_verify=False, allow_empty=False) -> subprocess.CompletedProcess:
     """
     Squashes all commits since the common ancestor of ref.
 
@@ -775,9 +775,8 @@ def squash(ref, no_verify=False, allow_empty=False):
             the range and multiple pull requests are found.
 
     Returns:
-        subprocess.CompletedProcess: The commit result. The commit result
-        contains either a failed pre-commit hook result or a successful/failed
-        commit result.
+        The commit result. The commit result contains either a failed pre-commit hook result or a
+        successful/failed commit result.
     """
     ref = github.get_pull_request_base() if ref == GITHUB_PR else ref
     range = f"{ref}.."
