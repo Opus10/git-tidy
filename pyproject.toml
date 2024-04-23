@@ -27,7 +27,7 @@ packages = [
 exclude = [
   "*/tests/"
 ]
-version = "1.2.0"
+version = "1.2.1"
 description = "Tidy git commit messages, linting, and logging"
 authors = ["Wes Kendall", "Tómas Árni Jónasson"]
 classifiers = [
