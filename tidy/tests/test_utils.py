@@ -1,4 +1,5 @@
 """Tests the tidy.utils() module"""
+
 from tidy import utils
 
 

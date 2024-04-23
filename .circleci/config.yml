@@ -1,57 +1,74 @@
 version: 2.1
 
-executors:
-  python:
-    working_directory: /code
-    docker:
-      - image: opus10/circleci-public-python-library
-        environment:
-          # Ensure makefile commands are not wrapped in "docker exec"
-          DOCKER_EXEC_WRAPPER: ''
+orbs:
+  opus10:
+    executors:
+      python:
+        working_directory: /code
+        docker:
+          - image: opus10/circleci-python-library:2024-04-17
+            environment:
+              # Ensure makefile commands are not wrapped in "docker-compose run"
+              EXEC_WRAPPER: ''
+              TOX_PARALLEL_NO_SPINNER: 1
+    commands:
+      test:
+        steps:
+          - checkout
+          - restore_cache:
+              key: v4-{{ checksum "poetry.lock" }} 
+          - run: make dependencies
+          - run: make full-test-suite
+          - save_cache:
+              key: v4-{{ checksum "poetry.lock" }} 
+              paths:
+                - /home/circleci/.cache/pypoetry/
+                - /code/.venv
+                - /code/.tox
 
 jobs:
   test:
-    executor: python
+    executor:
+      name: opus10/python
     steps:
-      - checkout
-      - restore_cache:
-          key: v1-{{ checksum "poetry.lock" }}
-      - run: make dependencies
-      - run: make full-test-suite
-      - save_cache:
-          key: v1-{{ checksum "poetry.lock" }}
-          paths:
-            - /home/circleci/.cache/pypoetry/
-            - /code/.venv
-            - /code/.tox
+      - opus10/test
 
   lint:
-    executor: python
+    executor: opus10/python
     steps:
       - checkout
       - restore_cache:
-          key: v1-{{ checksum "poetry.lock" }}
+          key: v4-{{ checksum "poetry.lock" }} 
       - run: make dependencies
       - run: make lint
 
-  check_changelog:
-    executor: python
+  type_check:
+    executor: opus10/python
     steps:
       - checkout
       - restore_cache:
-          key: v1-{{ checksum "poetry.lock" }}
+          key: v4-{{ checksum "poetry.lock" }}
       - run: make dependencies
-      - run: poetry run git tidy-log origin/master..
+      - run: make type-check || true
+
+  check_changelog:
+    executor: opus10/python
+    steps:
+      - checkout
+      - restore_cache:
+          key: v4-{{ checksum "poetry.lock" }} 
+      - run: make dependencies
+      - run: git tidy-log origin/main..
       - run: make tidy-lint
 
   deploy:
-    executor: python
+    executor: opus10/python
     steps:
       - checkout
       - run: ssh-add -D
       - run: echo "${GITHUB_DEVOPS_PRIVATE_SSH_KEY_BASE64}" | base64 --decode | ssh-add - > /dev/null
       - restore_cache:
-          key: v1-{{ checksum "poetry.lock" }}
+          key: v4-{{ checksum "poetry.lock" }} 
       - run: make dependencies
       - run: poetry run python devops.py deploy
 
@@ -61,15 +78,17 @@ workflows:
     jobs:
       - test
       - lint
+      - type_check
       - check_changelog:
           filters:
             branches:
-              ignore: master
+              ignore: main
       - deploy:
-          context: public-python-library
+          context: python-library
           requires:
             - test
             - lint
+            - type_check
           filters:
             branches:
-              only: master
+              only: main
