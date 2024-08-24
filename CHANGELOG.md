@@ -1,14 +1,20 @@
 # Changelog
 
+## 1.3.1 (2024-08-24)
+
+#### Changes
+
+  - Updated docs styling and testing dependencies by [@wesleykendall](https://github.com/wesleykendall) in [#15](https://github.com/Opus10/formaldict/pull/15).
+
 ## 1.2.1 (2024-04-23)
 
-### Trivial
+#### Trivial
 
   - Add Python 3.12 support and migrate docs to Mkdocs. [Wes Kendall, 48d0e54]
 
 ## 1.2.0 (2023-03-26)
 
-### Bug
+#### Bug
 
   - Fix errors parsing hyphenated trailers [Wesley Kendall, 1938c49]
 
@@ -19,37 +25,37 @@
 
 ## 1.1.5 (2022-08-24)
 
-### Trivial
+#### Trivial
 
   - Update with the latest Python library template [Opus 10 Devops, f7ae7e2]
 
 ## 1.1.4 (2022-07-31)
 
-### Trivial
+#### Trivial
 
   - Updates with latest Python template, fixing doc builds [Opus 10 Devops, d24c01b]
 
 ## 1.1.3 (2022-03-19)
 
-### Trivial
+#### Trivial
 
   - Updated with the latest template, which upgrades local Docker development [Opus 10 Devops, 9a5a1b6]
 
 ## 1.1.2 (2022-01-31)
 
-### Trivial
+#### Trivial
 
   - Minor docker development fixes [Opus 10 Devops, 25633a5]
 
 ## 1.1.1 (2022-01-31)
 
-### Trivial
+#### Trivial
 
   - Updated with the latest version of the template, which drops Python 3.6 support and adds Python 3.10 support [Opus 10 Devops, aa8e925]
 
 ## 1.1.0 (2021-12-15)
 
-### Bug
+#### Bug
 
   - Fix git versions installed on Mac [Wes Kendall, 2c7e268]
 
@@ -58,37 +64,37 @@
 
 ## 1.0.5 (2021-12-15)
 
-### Trivial
+#### Trivial
 
   - Update to the latest Python template [Wes Kendall, d961605]
 
 ## 1.0.4 (2021-05-29)
 
-### Trivial
+#### Trivial
 
   - Updated with latest Python template [Wes Kendall, 38da743]
 
 ## 1.0.3 (2020-06-29)
 
-### Trivial
+#### Trivial
 
   - Fixed link to image in README. [Wes Kendall, 825c511]
 
 ## 1.0.2 (2020-06-25)
 
-### Trivial
+#### Trivial
 
   - Add additional README docs and homebrew install instructions. [Wes Kendall, bb7859e]
 
 ## 1.0.1 (2020-06-24)
 
-### Trivial
+#### Trivial
 
   - Added more package metadata and use git-tidy to generate ChangeLog. [Wes Kendall, 0c7c000]
 
 ## 1.0.0 (2020-06-24)
 
-### Api-Break
+#### Api-Break
 
   - The initial release of git-tidy [Wes Kendall, 2968d20]
 
