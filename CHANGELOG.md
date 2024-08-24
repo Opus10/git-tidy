@@ -1,10 +1,10 @@
 # Changelog
 
-## 1.3.1 (2024-08-24)
+## 1.2.2 (2024-08-24)
 
 #### Changes
 
-  - Updated docs styling and testing dependencies by [@wesleykendall](https://github.com/wesleykendall) in [#15](https://github.com/Opus10/formaldict/pull/15).
+  - Updated docs styling and testing dependencies by [@wesleykendall](https://github.com/wesleykendall) in [#15](https://github.com/Opus10/git-tidy/pull/15).
 
 ## 1.2.1 (2024-04-23)
 
