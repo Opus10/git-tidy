@@ -12,4 +12,4 @@ See the [Tutorial](tutorial.md) for a walk-through of how to use `git-tidy` for 
 
 ## Compatibility
 
-`git-tidy` is compatible with Python 3.8 - 3.12.
+`git-tidy` is compatible with Python 3.9 - 3.13.

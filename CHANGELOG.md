@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0 (2024-11-01)
+
+#### Changes
+
+  - Added Python 3.13 support, dropped Python 3.8 support by [@wesleykendall](https://github.com/wesleykendall) in [#16](https://github.com/Opus10/git-tidy/pull/16).
+
 ## 1.2.2 (2024-08-24)
 
 #### Changes
