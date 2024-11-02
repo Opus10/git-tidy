@@ -4,4 +4,4 @@ Welcome to the docs for `git-tidy`! It doesn't appear that the author has create
 
 ## Compatibility
 
-`git-tidy` is compatible with Python 3.8 - 3.12.
+`git-tidy` is compatible with Python 3.9 - 3.13.
